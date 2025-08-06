@@ -1,527 +1,152 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Big M 모건 — Univers Interactif</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>24 Carrats Morgan — Portail</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rampart+One&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
-
-  /* Reset */
-  * { margin:0; padding:0; box-sizing: border-box; }
-  body, html {
-    width: 100%; height: 100%;
-    font-family: 'Orbitron', sans-serif;
-    background: radial-gradient(circle at center, #0f0c29 0%, #24243e 70%);
-    color: #00fff7;
-    overflow: hidden;
-  }
-
-  /* ----------------- Intro ----------------- */
-  #introScreen {
-    position: fixed; top:0; left:0; right:0; bottom:0;
-    background: radial-gradient(circle at center, #12131b, #0a0a12);
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    gap: 2rem; z-index: 9999; text-align: center; padding: 1rem;
-  }
-  #introScreen h1 {
-    font-size: 4rem;
-    text-shadow: 0 0 30px #00fff7;
-    user-select: none;
-    animation: glowPulse 2.5s ease-in-out infinite;
-  }
-  #introScreen label {
-    font-size: 1.5rem;
-    user-select: none;
-  }
-  #languageSelect {
-    font-size: 1.5rem;
-    padding: 1rem 2rem;
-    border-radius: 15px;
-    border: 2px solid #00fff7;
-    background: transparent;
-    color: #00fff7;
-    cursor: pointer;
-    outline: none;
-    box-shadow: 0 0 15px rgba(0,255,247,0.6);
-    user-select: none;
-    transition: background 0.3s ease;
-  }
-  #languageSelect:hover {
-    background: #00fff7;
-    color: #12131b;
-  }
-  #enterButton {
-    margin-top: 1.5rem;
-    padding: 1.2rem 3rem;
-    border-radius: 25px;
-    background: linear-gradient(135deg, #111, #222);
-    border: 2px solid #00fff7;
-    color: #00fff7;
-    font-weight: 700;
-    font-size: 1.4rem;
-    cursor: pointer;
-    box-shadow: 0 0 25px #00fff7;
-    transition: all 0.3s ease;
-    user-select: none;
-  }
-  #enterButton:hover {
-    background: #00fff7;
-    color: #12131b;
-    transform: scale(1.1);
-    box-shadow: 0 0 40px #00fff7;
-  }
-
-  /* Glow pulse animation */
-  @keyframes glowPulse {
-    0%, 100% { text-shadow: 0 0 15px #00fff7; }
-    50% { text-shadow: 0 0 35px #00fff7; }
-  }
-
-  /* ----------------- App Container ----------------- */
-  #appContainer {
-    display: none;
-    padding: 2rem 1rem 4rem 1rem;
-    min-height: 100vh;
-    background: radial-gradient(circle at center, #0f0c29 0%, #24243e 70%);
-    color: #00fff7;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    overflow-x: hidden;
-  }
-
-  /* ----------------- Navbar ----------------- */
-  nav.navbar {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    height: 70px;
-    background: #0b0c10dd;
-    backdrop-filter: blur(8px);
-    border-bottom: 2px solid #00fff7;
-    display: flex;
-    align-items: center;
-    padding: 0 1.5rem;
-    gap: 1rem;
-    z-index: 1000;
-  }
-  .navbar .profile-img {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    border: 3px solid #00fff7;
-    object-fit: cover;
-    box-shadow: 0 0 15px #00fff7;
-    transition: transform 0.4s ease;
-    cursor: pointer;
-  }
-  /* Parallax-like hover effect */
-  .navbar .profile-img:hover {
-    transform: scale(1.15) rotate(10deg);
-  }
-  .navbar .title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    flex-grow: 1;
-    user-select: none;
-    text-shadow: 0 0 12px #00fff7;
-  }
-  .navbar button.back-button {
-    background: transparent;
-    border: 2px solid #00fff7;
-    border-radius: 12px;
-    padding: 0.5rem 1.2rem;
-    color: #00fff7;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 10px #00fff7;
-  }
-  .navbar button.back-button:hover {
-    background: #00fff7;
-    color: #12131b;
-    box-shadow: 0 0 30px #00fff7;
-    transform: scale(1.1);
-  }
-  .navbar button.back-button.pulse {
-    animation: pulseGlow 2.5s infinite;
-  }
-  @keyframes pulseGlow {
-    0%, 100% { box-shadow: 0 0 10px #00fff7; }
-    50% { box-shadow: 0 0 30px #00fff7; }
-  }
-
-  /* ----------------- Main Menu ----------------- */
-  main#main-menu {
-    max-width: 640px;
-    width: 100%;
-    margin-top: 90px;
-    text-align: center;
-    user-select: none;
-  }
-  #main-menu .link-button {
-    display: block;
-    margin: 1rem auto;
-    padding: 1.5rem 3rem;
-    background: linear-gradient(135deg, #111, #222);
-    border: 2px solid #00fff7;
-    border-radius: 20px;
-    color: #00fff7;
-    font-weight: 800;
-    font-size: 1.4rem;
-    text-decoration: none;
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(0,255,247,0.5);
-    transition: all 0.35s ease;
-    max-width: 360px;
-    user-select: none;
-  }
-  #main-menu .link-button:hover {
-    background: #00fff7;
-    color: #12131b;
-    box-shadow: 0 0 45px #00fff7;
-    transform: scale(1.1);
-  }
-
-  /* Cascade animation for main buttons */
-  #main-menu .link-button {
-    opacity: 0;
-    transform: translateY(40px);
-    animation-fill-mode: forwards;
-  }
-  #main-menu .link-button:nth-child(1) { animation: slideFadeIn 0.6s 0.2s ease forwards; }
-  #main-menu .link-button:nth-child(2) { animation: slideFadeIn 0.6s 0.4s ease forwards; }
-  #main-menu .link-button:nth-child(3) { animation: slideFadeIn 0.6s 0.6s ease forwards; }
-  #main-menu .link-button:nth-child(4) { animation: slideFadeIn 0.6s 0.8s ease forwards; }
-  #main-menu .link-button:nth-child(5) { animation: slideFadeIn 0.6s 1s ease forwards; }
-
-  @keyframes slideFadeIn {
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ----------------- Menu Sections ----------------- */
-  section.menu-section {
-    display: none;
-    background: #12131bdd;
-    border-radius: 25px;
-    padding: 2rem 3rem;
-    box-shadow: 0 0 55px #00fff7bb;
-    position: relative;
-    min-height: 280px;
-    color: #00fff7;
-    user-select: text;
-    animation: fadeInSlide 0.5s ease forwards;
-    max-width: 640px;
-    margin-top: 90px;
-  }
-  section.menu-section.active {
-    display: block;
-  }
-
-  section.menu-section h2 {
-    margin-bottom: 1.2rem;
-    font-size: 2.4rem;
-    text-shadow: 0 0 15px #00fff7;
-  }
-  section.menu-section a, section.menu-section p {
-    color: #00fff7;
-    font-size: 1.2rem;
-    margin: 1.2rem 0;
-    text-decoration: none;
-    display: block;
-    user-select: text;
-    transition: color 0.3s ease;
-  }
-  section.menu-section a:hover {
-    color: #00ddd7;
-    text-decoration: underline;
-  }
-
-  /* Cinematic text animation */
-  .cinematic-text {
-    font-size: 1.3rem;
-    font-style: italic;
-    opacity: 0;
-    animation: cinematicFadeIn 2.8s ease forwards;
-    max-width: 550px;
-    margin: 1.5rem auto 0 auto;
-    color: #00fff7cc;
-    text-shadow: 0 0 20px #00fff7aa;
-  }
-  @keyframes cinematicFadeIn {
-    to { opacity: 1; }
-  }
-
-  /* Background subtle animation on menu */
-  @keyframes bgPulse {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-  section.menu-section:nth-child(odd) {
-    background: linear-gradient(270deg, #12131b, #1f2237, #12131b);
-    background-size: 400% 400%;
-    animation: bgPulse 10s ease infinite;
-  }
-  section.menu-section:nth-child(even) {
-    background: linear-gradient(270deg, #12131b, #24243e, #12131b);
-    background-size: 400% 400%;
-    animation: bgPulse 15s ease infinite;
-  }
-
+:root{
+  --clr-bg:#0f0c29;
+  --clr-bg-alt:#24243e;
+  --clr-accent:#00fff7;
+  --clr-accent-dark:#12131b;
+  --radius:20px;
+  --duration:.35s;
+  --font:'Orbitron',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body,html{width:100%;height:100%;font-family:var(--font);background:radial-gradient(circle,var(--clr-bg) 0%,var(--clr-bg-alt) 70%);color:var(--clr-accent);overflow:hidden;text-align:center}
+/* Intro */
+#introScreen{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2rem;z-index:9999;padding:1rem}
+#animatedTitle{font-family:'Rampart One',cursive;font-size:clamp(2.5rem,8vw,5rem);text-shadow:0 0 10px var(--clr-accent),0 0 20px var(--clr-accent),0 0 40px var(--clr-accent);animation:pulseGlow 2s infinite alternate}
+@keyframes pulseGlow{from{text-shadow:0 0 10px var(--clr-accent),0 0 20px var(--clr-accent),0 0 40px var(--clr-accent)}to{text-shadow:0 0 20px var(--clr-accent),0 0 30px var(--clr-accent),0 0 60px var(--clr-accent)}}
+#languageSelect{font-size:1.5rem;padding:1rem 2rem;border-radius:var(--radius);border:2px solid var(--clr-accent);background:transparent;color:var(--clr-accent);cursor:pointer}
+#enterButton{margin-top:1rem;padding:1.2rem 3rem;border-radius:var(--radius);border:none;background:var(--clr-accent);color:var(--clr-accent-dark);font-weight:700;font-size:1.4rem;cursor:pointer;transition:all var(--duration)}
+#enterButton:disabled{opacity:.5;cursor:not-allowed}
+/* App */
+#appContainer{display:none;flex-direction:column;align-items:center;min-height:100vh;padding:2rem 1rem 4rem}
+.navbar{position:fixed;top:0;left:0;right:0;height:70px;background:#0b0c10dd;backdrop-filter:blur(8px);border-bottom:2px solid var(--clr-accent);display:flex;align-items:center;padding:0 1.5rem;gap:1rem;z-index:1000}
+.navbar .profile-img{width:48px;height:48px;border-radius:50%;border:3px solid var(--clr-accent);object-fit:cover}
+.navbar .title{flex-grow:1;font-size:1.5rem;font-weight:700;text-shadow:0 0 12px var(--clr-accent)}
+.back-button{background:transparent;border:2px solid var(--clr-accent);border-radius:12px;padding:.5rem 1.2rem;color:var(--clr-accent);cursor:pointer}
+#main-menu{max-width:640px;width:100%;margin-top:90px;display:grid;gap:1.5rem;padding:0 1rem}
+.link-button{display:flex;align-items:center;justify-content:center;gap:.75rem;padding:1.5rem 3rem;background:linear-gradient(135deg,#111,#222);border:2px solid var(--clr-accent);border-radius:var(--radius);color:var(--clr-accent);font-weight:800;font-size:1.4rem;cursor:pointer;transition:all var(--duration)}
+.link-button:hover{background:var(--clr-accent);color:var(--clr-accent-dark);transform:scale(1.05)}
+.link-button svg{width:20px;height:20px;fill:currentColor}
+.menu-section{display:none;background:#12131bdd;border-radius:var(--radius);padding:2rem 3rem;margin-top:90px;max-width:640px}
+.menu-section.active{display:block;animation:fadeInSlide .5s forwards}
+.menu-section h2{margin-bottom:1.2rem;font-size:2.4rem;text-shadow:0 0 15px var(--clr-accent)}
+.menu-section a{color:var(--clr-accent);font-size:1.2rem;text-decoration:none}
+.menu-section a:hover{text-decoration:underline}
+#qrCode canvas{margin-top:1rem;border:2px solid var(--clr-accent);border-radius:var(--radius)}
+@keyframes fadeInSlide{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<!-- Intro -->
+<div id="introScreen">
+  <h1 id="animatedTitle">24 Carrats Morgan</h1>
+  <label for="languageSelect">Choisis ta langue / Choose your language :</label>
+  <select id="languageSelect">
+    <option value="">-- Choisis / Choose --</option>
+    <option value="fr">Français</option>
+    <option value="en">English</option>
+  </select>
+  <button id="enterButton" disabled>Entrer</button>
+</div>
 
-  <!-- Intro plein écran -->
-  <div id="introScreen" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-describedby="introDesc">
-    <h1 id="introTitle">Bienvenue dans mon univers</h1>
-    <label for="languageSelect">Choisis ta langue / Choose your language :</label>
-    <select id="languageSelect" aria-describedby="languageDesc">
-      <option value="fr">Français 🇫🇷</option>
-      <option value="en">English 🇬🇧</option>
-    </select>
-    <button id="enterButton" aria-label="Entrer dans le site">Entrer</button>
-  </div>
+<!-- App -->
+<div id="appContainer">
+  <nav class="navbar">
+    <img src="https://i.imgur.com/7q0kM6f.jpg" alt="Morgan" class="profile-img">
+    <span class="title">24 Carrats Morgan</span>
+    <button class="back-button" id="backButton" style="display:none">← Retour</button>
+  </nav>
 
-  <!-- App principal -->
-  <div id="appContainer" aria-live="polite" aria-atomic="true">
-    <nav class="navbar" aria-label="Barre de navigation principale">
-      <img src="https://i.imgur.com/7q0kM6f.jpg" alt="Photo de profil Morgan" class="profile-img" />
-      <div class="title">🌌 Big M 모건</div>
-      <button class="back-button pulse" id="backButton" aria-label="Retour au menu principal" style="display:none;">← Retour</button>
-    </nav>
+  <main id="main-menu">
+    <button class="link-button" data-menu="instagram"><svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4c0 3.2-2.6 5.8-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8C2 4.6 4.6 2 7.8 2zm-.2 2A3.6 3.6 0 0 0 4 7.6v8.8c0 2 1.6 3.6 3.6 3.6h8.8c2 0 3.6-1.6 3.6-3.6V7.6c0-2-1.6-3.6-3.6-3.6H7.6zm9.65 1.5A1.25 1.25 0 0 1 18.5 6.75 1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75 1.25 1.25 0 0 1 17.25 5.5zM12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>Instagram</button>
+    <button class="link-button" data-menu="youtube"><svg viewBox="0 0 24 24"><path d="M10 15l5.19-3L10 9v6zM21.56 7.17A2 2 0 0 0 20 5.33H4a2 2 0 0 0-2 2v9.34a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7.17z"/></svg>YouTube</button>
+    <button class="link-button" data-menu="mail"><svg viewBox="0 0 24 24"><path d="M20 8l-8 5-8-5V6l8 5 8-5v2zm0-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/></svg>Email</button>
+    <button class="link-button" data-menu="phone"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2a1.25 1.25 0 0 1 1.02-.27 17.9 17.9 0 0 0 3.55-.39 1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1.25 1.25 0 0 1-.25 1.32z"/></svg>Téléphone</button>
+    <button class="link-button" data-menu="x"><svg viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05a4.5 4.5 0 0 0-3.18-1.38c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.99-3.56-.18-6.73-1.89-8.84-4.48-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.7 0-1.34-.21-1.92-.53v.05c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.94.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.07C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/></svg>X (Twitter)</button>
+    <button class="link-button" data-menu="facebook"><svg viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>Facebook</button>
+  </main>
 
-    <main id="main-menu" aria-label="Menu principal des liens">
-      <button class="link-button" data-menu="instagram" aria-haspopup="true" aria-controls="menu-instagram">📸 Instagram</button>
-      <button class="link-button" data-menu="youtube" aria-haspopup="true" aria-controls="menu-youtube">▶️ YouTube</button>
-      <button class="link-button" data-menu="mail" aria-haspopup="true" aria-controls="menu-mail">✉️ Email</button>
-      <button class="link-button" data-menu="phone" aria-haspopup="true" aria-controls="menu-phone">📞 Téléphone</button>
-      <button class="link-button" data-menu="twitter" aria-haspopup="true" aria-controls="menu-twitter">🐦 Twitter</button>
-    </main>
+  <section id="menu-instagram" class="menu-section">
+    <h2>Instagram</h2>
+    <p>@i_am_24carrats_morgan</p>
+    <a href="https://instagram.com/i_am_24carrats_morgan" target="_blank" rel="noopener noreferrer">Visiter</a>
+    <div id="qrCode"></div>
+  </section>
+  <section id="menu-youtube" class="menu-section">
+    <h2>YouTube</h2>
+    <p>Johnny Morgan</p>
+    <a href="https://youtube.com/@johnnymorgan" target="_blank" rel="noopener noreferrer">Voir la chaîne</a>
+  </section>
+  <section id="menu-mail" class="menu-section">
+    <h2>Email</h2>
+    <a href="mailto:24carratsmorgan@gmail.com">24carratsmorgan@gmail.com</a>
+  </section>
+  <section id="menu-phone" class="menu-section">
+    <h2>Téléphone</h2>
+    <a href="tel:+33670283793">06 70 28 37 93</a>
+  </section>
+  <section id="menu-x" class="menu-section">
+    <h2>X (Twitter)</h2>
+    <p>@i_am_24carrats_Morgan</p>
+    <a href="https://x.com/i_am_24carrats_Morgan" target="_blank" rel="noopener noreferrer">Suivre</a>
+  </section>
+  <section id="menu-facebook" class="menu-section">
+    <h2>Facebook</h2>
+    <p>Ven-ka Morgan</p>
+    <a href="https://facebook.com/venka.morgan" target="_blank" rel="noopener noreferrer">Visiter</a>
+  </section>
+</div>
 
-    <!-- Menus individuels -->
-    <section id="menu-instagram" class="menu-section" role="region" aria-label="Menu Instagram">
-      <h2>Instagram</h2>
-      <p>Rejoins-moi sur Instagram pour découvrir mes dernières créations et moments forts.</p>
-      <a href="https://instagram.com/i_am_24carrats_morgan" target="_blank" rel="noopener noreferrer" tabindex="0">Visiter Instagram</a>
-      <p class="cinematic-text">“Là où les pixels brillent comme des diamants...”</p>
-    </section>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script>
+const langSel = document.getElementById('languageSelect');
+const enterBtn = document.getElementById('enterButton');
+const introScreen = document.getElementById('introScreen');
+const app = document.getElementById('appContainer');
+const backBtn = document.getElementById('backButton');
 
-    <section id="menu-youtube" class="menu-section" role="region" aria-label="Menu YouTube">
-      <h2>YouTube</h2>
-      <p>Regarde mes vidéos, vlogs et performances exclusives sur ma chaîne YouTube.</p>
-      <a href="https://youtube.com/@johnnymorgan" target="_blank" rel="noopener noreferrer" tabindex="0">Voir YouTube</a>
-      <p class="cinematic-text">“Chaque vidéo est une porte vers un autre univers...”</p>
-    </section>
+langSel.addEventListener('change', () => {
+  enterBtn.disabled = !langSel.value;
+});
 
-    <section id="menu-mail" class="menu-section" role="region" aria-label="Menu Email">
-      <h2>Email</h2>
-      <p>Pour toute collaboration ou question, envoie-moi un mail.</p>
-      <a href="mailto:24carratsmorgan@gmail.com" tabindex="0">Envoyer un email</a>
-      <p class="cinematic-text">“Les mots écrits sont des ponts entre les âmes.”</p>
-    </section>
+enterBtn.addEventListener('click', () => {
+  localStorage.setItem('lang', langSel.value);
+  introScreen.style.display = 'none';
+  app.style.display = 'flex';
+});
 
-    <section id="menu-phone" class="menu-section" role="region" aria-label="Menu Téléphone">
-      <h2>Téléphone</h2>
-      <p>Tu préfères une conversation directe ? Voici mon numéro.</p>
-      <a href="tel:+242061098011" tabindex="0">Appeler Morgan</a>
-      <p class="cinematic-text">“La voix humaine, l’onde la plus vraie.”</p>
-    </section>
+if (localStorage.getItem('lang')) {
+  introScreen.remove();
+  app.style.display = 'flex';
+}
 
-    <section id="menu-twitter" class="menu-section" role="region" aria-label="Menu Twitter">
-      <h2>Twitter</h2>
-      <p>Pour suivre mes pensées et actualités instantanées.</p>
-      <a href="https://twitter.com/24morgan" target="_blank" rel="noopener noreferrer" tabindex="0">Voir Twitter</a>
-      <p class="cinematic-text">“140 caractères pour illuminer la toile.”</p>
-    </section>
-  </div>
+document.getElementById('main-menu').addEventListener('click', e => {
+  const btn = e.target.closest('[data-menu]');
+  if (!btn) return;
+  const id = btn.dataset.menu;
+  document.querySelectorAll('.menu-section').forEach(s => s.classList.toggle('active', s.id === `menu-${id}`));
+  document.getElementById('main-menu').style.display = 'none';
+  backBtn.style.display = 'inline-block';
+});
 
-  <script>
-    const introScreen = document.getElementById('introScreen');
-    const enterButton = document.getElementById('enterButton');
-    const languageSelect = document.getElementById('languageSelect');
-    const appContainer = document.getElementById('appContainer');
-    const mainMenu = document.getElementById('main-menu');
-    const menuSections = document.querySelectorAll('.menu-section');
-    const backButton = document.getElementById('backButton');
+backBtn.addEventListener('click', () => {
+  document.querySelectorAll('.menu-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('main-menu').style.display = 'grid';
+  backBtn.style.display = 'none';
+});
 
-    // Textes traduits
-    const translations = {
-      fr: {
-        welcome: "Bienvenue dans mon univers",
-        chooseLang: "Choisis ta langue :",
-        enter: "Entrer",
-        navTitle: "🌌 Big M 모건",
-        back: "← Retour",
-        menus: {
-          instagram: {
-            title: "Instagram",
-            desc: "Rejoins-moi sur Instagram pour découvrir mes dernières créations et moments forts.",
-            linkText: "Visiter Instagram",
-            cinematic: "“Là où les pixels brillent comme des diamants...”"
-          },
-          youtube: {
-            title: "YouTube",
-            desc: "Regarde mes vidéos, vlogs et performances exclusives sur ma chaîne YouTube.",
-            linkText: "Voir YouTube",
-            cinematic: "“Chaque vidéo est une porte vers un autre univers...”"
-          },
-          mail: {
-            title: "Email",
-            desc: "Pour toute collaboration ou question, envoie-moi un mail.",
-            linkText: "Envoyer un email",
-            cinematic: "“Les mots écrits sont des ponts entre les âmes.”"
-          },
-          phone: {
-            title: "Téléphone",
-            desc: "Tu préfères une conversation directe ? Voici mon numéro.",
-            linkText: "Appeler Morgan",
-            cinematic: "“La voix humaine, l’onde la plus vraie.”"
-          },
-          twitter: {
-            title: "Twitter",
-            desc: "Pour suivre mes pensées et actualités instantanées.",
-            linkText: "Voir Twitter",
-            cinematic: "“140 caractères pour illuminer la toile.”"
-          }
-        }
-      },
-      en: {
-        welcome: "Welcome to my universe",
-        chooseLang: "Choose your language:",
-        enter: "Enter",
-        navTitle: "🌌 Big M 모건",
-        back: "← Back",
-        menus: {
-          instagram: {
-            title: "Instagram",
-            desc: "Join me on Instagram to discover my latest creations and highlights.",
-            linkText: "Visit Instagram",
-            cinematic: "“Where pixels shine like diamonds...”"
-          },
-          youtube: {
-            title: "YouTube",
-            desc: "Watch my videos, vlogs and exclusive performances on my YouTube channel.",
-            linkText: "Watch YouTube",
-            cinematic: "“Each video is a door to another universe...”"
-          },
-          mail: {
-            title: "Email",
-            desc: "For any collaboration or questions, send me an email.",
-            linkText: "Send an email",
-            cinematic: "“Written words are bridges between souls.”"
-          },
-          phone: {
-            title: "Phone",
-            desc: "Prefer a direct conversation? Here's my number.",
-            linkText: "Call Morgan",
-            cinematic: "“The human voice, the truest wave.”"
-          },
-          twitter: {
-            title: "Twitter",
-            desc: "Follow my thoughts and instant updates.",
-            linkText: "See Twitter",
-            cinematic: "“140 characters to light up the web.”"
-          }
-        }
-      }
-    };
-
-    // Charge la langue enregistrée
-    function getSavedLang() {
-      return localStorage.getItem('lang') || 'fr';
-    }
-    function saveLang(lang) {
-      localStorage.setItem('lang', lang);
-    }
-
-    // Met à jour tous les textes selon la langue choisie
-    function updateTexts(lang) {
-      const t = translations[lang];
-      document.getElementById('introTitle').textContent = t.welcome;
-      document.querySelector('#introScreen label').textContent = t.chooseLang;
-      enterButton.textContent = t.enter;
-      document.querySelector('.navbar .title').textContent = t.navTitle;
-      backButton.textContent = t.back;
-
-      // Met à jour chaque section
-      for (const key in t.menus) {
-        const section = document.getElementById('menu-' + key);
-        if (section) {
-          section.querySelector('h2').textContent = t.menus[key].title;
-          section.querySelector('p').textContent = t.menus[key].desc;
-          const link = section.querySelector('a');
-          link.textContent = t.menus[key].linkText;
-          section.querySelector('.cinematic-text').textContent = t.menus[key].cinematic;
-        }
-      }
-    }
-
-    // Affiche l'app, cache l'intro
-    function showApp() {
-      introScreen.style.display = 'none';
-      appContainer.style.display = 'flex';
-    }
-
-    // Ouvre un menu individuel
-    function openMenu(menuId) {
-      mainMenu.style.display = 'none';
-      menuSections.forEach(section => {
-        if(section.id === menuId){
-          section.classList.add('active');
-          section.style.display = 'block';
-        } else {
-          section.classList.remove('active');
-          section.style.display = 'none';
-        }
-      });
-      backButton.style.display = 'inline-block';
-      backButton.focus();
-    }
-
-    // Ferme le menu individuel pour revenir au principal
-    function closeMenu() {
-      menuSections.forEach(section => {
-        section.classList.remove('active');
-        section.style.display = 'none';
-      });
-      mainMenu.style.display = 'block';
-      backButton.style.display = 'none';
-      mainMenu.querySelector('button').focus();
-    }
-
-    // Événements
-    enterButton.addEventListener('click', () => {
-      const lang = languageSelect.value;
-      saveLang(lang);
-      updateTexts(lang);
-      showApp();
-    });
-
-    // Si la langue est déjà sauvegardée, saute l'intro
-    window.addEventListener('load', () => {
-      const lang = getSavedLang();
-      languageSelect.value = lang;
-      updateTexts(lang);
-      showApp();
-    });
-
-    // Gestion boutons menu principal
-    mainMenu.querySelectorAll('button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        openMenu('menu-' + btn.dataset.menu);
-      });
-    });
-
-    // Bouton retour
-    backButton.addEventListener('click', closeMenu);
-
-    // Touche Echap pour revenir en arrière
-    document.addEventListener('keydown', e => {
-      if(e.key === 'Escape' && backButton.style.display === 'inline-block') {
-        closeMenu();
-      }
-    });
-  </script>
+/* QR Code */
+QRCode.toCanvas(document.getElementById('qrCode'), 'https://instagram.com/i_am_24carrats_morgan', { width: 160 }, err => {
+  if (err) console.error(err);
+});
+</script>
 </body>
 </html>
