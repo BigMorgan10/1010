@@ -3,986 +3,525 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Big M 모건 — Univers Infini</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet" />
+<title>Big M 모건 — Univers Interactif</title>
 <style>
-  /* Reset & base */
-  * {
-    margin: 0; padding: 0; box-sizing: border-box;
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+
+  /* Reset */
+  * { margin:0; padding:0; box-sizing: border-box; }
+  body, html {
+    width: 100%; height: 100%;
     font-family: 'Orbitron', sans-serif;
-  }
-  html, body {
-    height: 100%;
-    background: radial-gradient(circle at center, #0f0c29, #24243e);
+    background: radial-gradient(circle at center, #0f0c29 0%, #24243e 70%);
     color: #00fff7;
+    overflow: hidden;
+  }
+
+  /* ----------------- Intro ----------------- */
+  #introScreen {
+    position: fixed; top:0; left:0; right:0; bottom:0;
+    background: radial-gradient(circle at center, #12131b, #0a0a12);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    gap: 2rem; z-index: 9999; text-align: center; padding: 1rem;
+  }
+  #introScreen h1 {
+    font-size: 4rem;
+    text-shadow: 0 0 30px #00fff7;
+    user-select: none;
+    animation: glowPulse 2.5s ease-in-out infinite;
+  }
+  #introScreen label {
+    font-size: 1.5rem;
+    user-select: none;
+  }
+  #languageSelect {
+    font-size: 1.5rem;
+    padding: 1rem 2rem;
+    border-radius: 15px;
+    border: 2px solid #00fff7;
+    background: transparent;
+    color: #00fff7;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 0 15px rgba(0,255,247,0.6);
+    user-select: none;
+    transition: background 0.3s ease;
+  }
+  #languageSelect:hover {
+    background: #00fff7;
+    color: #12131b;
+  }
+  #enterButton {
+    margin-top: 1.5rem;
+    padding: 1.2rem 3rem;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #111, #222);
+    border: 2px solid #00fff7;
+    color: #00fff7;
+    font-weight: 700;
+    font-size: 1.4rem;
+    cursor: pointer;
+    box-shadow: 0 0 25px #00fff7;
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+  #enterButton:hover {
+    background: #00fff7;
+    color: #12131b;
+    transform: scale(1.1);
+    box-shadow: 0 0 40px #00fff7;
+  }
+
+  /* Glow pulse animation */
+  @keyframes glowPulse {
+    0%, 100% { text-shadow: 0 0 15px #00fff7; }
+    50% { text-shadow: 0 0 35px #00fff7; }
+  }
+
+  /* ----------------- App Container ----------------- */
+  #appContainer {
+    display: none;
+    padding: 2rem 1rem 4rem 1rem;
+    min-height: 100vh;
+    background: radial-gradient(circle at center, #0f0c29 0%, #24243e 70%);
+    color: #00fff7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
     overflow-x: hidden;
   }
-  body.dark-mode {
-    background: radial-gradient(circle at center, #01010a, #121125);
-    color: #0ff;
-  }
-  /* Galaxy background & rotation */
-  #galaxy-bg {
-    position: fixed; top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: url('https://images.unsplash.com/photo-1470770903676-69b98201ea1c?auto=format&fit=crop&w=1950&q=80') no-repeat center center;
-    background-size: cover;
-    filter: brightness(0.6);
-    animation: spinGalaxy 300s linear infinite;
-    z-index: -10;
-  }
-  @keyframes spinGalaxy {
-    from {transform: rotate(0deg);}
-    to {transform: rotate(360deg);}
-  }
-  /* Container styling */
-  .container {
-    max-width: 900px;
-    margin: 4rem auto 2rem;
-    padding: 2rem;
-    background: rgba(15,12,41,0.7);
-    border-radius: 20px;
-    box-shadow: 0 0 40px #00fff7;
-    text-align: center;
-  }
-  h1 {
-    font-size: 3rem;
-    text-shadow: 0 0 25px #00fff7;
-    margin-bottom: 0.5rem;
-    letter-spacing: 3px;
-    user-select: none;
-  }
-  h2 {
-    margin-bottom: 1rem;
-  }
-  .welcome-msg {
-    font-style: italic;
-    color: #aaa;
-    margin-bottom: 2rem;
-    text-shadow: 0 0 12px #00fff7aa;
-  }
-  p {
-    font-size: 1.1rem;
-    line-height: 1.5;
-  }
-  a.link-btn {
-    display: block;
-    margin: 0.5rem auto;
-    padding: 1rem 1.5rem;
-    max-width: 350px;
-    background: #000a;
-    border: 2px solid #00fff7;
-    border-radius: 15px;
-    color: #00fff7;
-    text-decoration: none;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    user-select: none;
-  }
-  a.link-btn:hover {
-    background: #00fff7;
-    color: #111;
-    transform: translateY(-5px);
-    box-shadow: 0 0 30px #00fff7;
-  }
-  /* Tabs navigation */
-  .tabs {
+
+  /* ----------------- Navbar ----------------- */
+  nav.navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 70px;
+    background: #0b0c10dd;
+    backdrop-filter: blur(8px);
+    border-bottom: 2px solid #00fff7;
     display: flex;
-    justify-content: center;
+    align-items: center;
+    padding: 0 1.5rem;
     gap: 1rem;
-    margin-bottom: 2rem;
-    user-select: none;
+    z-index: 1000;
   }
-  .tab {
-    padding: 0.8rem 2rem;
-    cursor: pointer;
-    background: linear-gradient(135deg, #111, #222);
-    border: 2px solid #00fff7;
-    border-radius: 15px;
-    color: #00fff7;
-    font-weight: 700;
-    transition: all 0.3s ease;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-size: 1rem;
-  }
-  .tab:hover:not(.active) {
-    background: #00fff7;
-    color: #111;
-    transform: scale(1.1);
-    box-shadow: 0 0 25px #00fff7;
-  }
-  .tab.active {
-    background: #00fff7;
-    color: #111;
-    box-shadow: 0 0 30px #00fff7;
-    transform: scale(1.15);
-    cursor: default;
-  }
-  /* Sections */
-  .content-section {
-    display: none;
-    background: linear-gradient(135deg, #111, #222);
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 0 40px #00fff7bb;
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: left;
-    color: #00fff7;
-    font-size: 1rem;
-  }
-  .content-section.active {
-    display: block;
-    animation: fadeInUp 1s ease forwards;
-  }
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  /* Admin Panel */
-  #admin-panel {
-    margin-top: 2rem;
-    padding: 1rem;
-    background: rgba(0,0,0,0.7);
-    border-radius: 15px;
-    box-shadow: 0 0 25px #00fff7;
-    display: none;
-    max-width: 600px;
-    color: #00fff7;
-    user-select: text;
-  }
-  #admin-panel h2 {
-    margin-bottom: 1rem;
-    font-weight: 700;
-    font-size: 1.5rem;
-    text-align: center;
-  }
-  #admin-panel textarea {
-    width: 100%;
-    height: 120px;
-    border-radius: 10px;
-    border: none;
-    background: #111;
-    color: #00fff7;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1rem;
-    padding: 1rem;
-    resize: vertical;
-  }
-  #admin-panel button {
-    margin-top: 1rem;
-    padding: 0.7rem 1.5rem;
-    border-radius: 15px;
-    border: 2px solid #00fff7;
-    background: linear-gradient(135deg, #111, #222);
-    color: #00fff7;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  #admin-panel button:hover {
-    background: #00fff7;
-    color: #111;
-    box-shadow: 0 0 25px #00fff7;
-    transform: scale(1.05);
-  }
-  /* Gallery */
-  .gallery {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-  .gallery img {
-    width: 120px;
-    height: 120px;
-    border-radius: 15px;
+  .navbar .profile-img {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 3px solid #00fff7;
     object-fit: cover;
     box-shadow: 0 0 15px #00fff7;
     transition: transform 0.4s ease;
     cursor: pointer;
   }
-  .gallery img:hover {
-    transform: scale(1.1) rotate(5deg);
+  /* Parallax-like hover effect */
+  .navbar .profile-img:hover {
+    transform: scale(1.15) rotate(10deg);
   }
-  /* Chatbot */
-  #chatbot {
-    margin-top: 2rem;
-    background: #111a;
-    border-radius: 15px;
-    padding: 1rem;
-    max-width: 600px;
-    color: #0ff;
-    font-size: 0.9rem;
-    user-select: text;
+  .navbar .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    flex-grow: 1;
+    user-select: none;
+    text-shadow: 0 0 12px #00fff7;
   }
-  #chatbot-messages {
-    height: 150px;
-    overflow-y: auto;
-    border: 1px solid #00fff7;
-    padding: 1rem;
-    border-radius: 10px;
-    background: #000c;
-    margin-bottom: 1rem;
-  }
-  #chatbot-input {
-    width: calc(100% - 100px);
-    padding: 0.7rem;
-    border-radius: 15px;
-    border: none;
-    background: #111;
-    color: #00fff7;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1rem;
-    outline: none;
-    margin-right: 0.5rem;
-  }
-  #chatbot-send {
-    width: 80px;
-    padding: 0.7rem;
-    border-radius: 15px;
+  .navbar button.back-button {
+    background: transparent;
     border: 2px solid #00fff7;
+    border-radius: 12px;
+    padding: 0.5rem 1.2rem;
+    color: #00fff7;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px #00fff7;
+  }
+  .navbar button.back-button:hover {
+    background: #00fff7;
+    color: #12131b;
+    box-shadow: 0 0 30px #00fff7;
+    transform: scale(1.1);
+  }
+  .navbar button.back-button.pulse {
+    animation: pulseGlow 2.5s infinite;
+  }
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 10px #00fff7; }
+    50% { box-shadow: 0 0 30px #00fff7; }
+  }
+
+  /* ----------------- Main Menu ----------------- */
+  main#main-menu {
+    max-width: 640px;
+    width: 100%;
+    margin-top: 90px;
+    text-align: center;
+    user-select: none;
+  }
+  #main-menu .link-button {
+    display: block;
+    margin: 1rem auto;
+    padding: 1.5rem 3rem;
     background: linear-gradient(135deg, #111, #222);
-    color: #00fff7;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  #chatbot-send:hover {
-    background: #00fff7;
-    color: #111;
-    box-shadow: 0 0 20px #00fff7;
-  }
-  /* Badge */
-  #badge {
-    margin-top: 1rem;
-    font-weight: 700;
-    color: #0ff;
-    user-select: none;
-  }
-  /* Toggle mode */
-  #toggle-mode {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background: none;
     border: 2px solid #00fff7;
-    border-radius: 15px;
+    border-radius: 20px;
     color: #00fff7;
-    padding: 0.5rem 1rem;
+    font-weight: 800;
+    font-size: 1.4rem;
+    text-decoration: none;
     cursor: pointer;
-    font-weight: 700;
+    box-shadow: 0 0 20px rgba(0,255,247,0.5);
+    transition: all 0.35s ease;
+    max-width: 360px;
     user-select: none;
-    transition: all 0.3s ease;
-    z-index: 999;
   }
-  #toggle-mode:hover {
+  #main-menu .link-button:hover {
     background: #00fff7;
-    color: #111;
-    box-shadow: 0 0 20px #00fff7;
-    transform: scale(1.05);
+    color: #12131b;
+    box-shadow: 0 0 45px #00fff7;
+    transform: scale(1.1);
   }
+
+  /* Cascade animation for main buttons */
+  #main-menu .link-button {
+    opacity: 0;
+    transform: translateY(40px);
+    animation-fill-mode: forwards;
+  }
+  #main-menu .link-button:nth-child(1) { animation: slideFadeIn 0.6s 0.2s ease forwards; }
+  #main-menu .link-button:nth-child(2) { animation: slideFadeIn 0.6s 0.4s ease forwards; }
+  #main-menu .link-button:nth-child(3) { animation: slideFadeIn 0.6s 0.6s ease forwards; }
+  #main-menu .link-button:nth-child(4) { animation: slideFadeIn 0.6s 0.8s ease forwards; }
+  #main-menu .link-button:nth-child(5) { animation: slideFadeIn 0.6s 1s ease forwards; }
+
+  @keyframes slideFadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ----------------- Menu Sections ----------------- */
+  section.menu-section {
+    display: none;
+    background: #12131bdd;
+    border-radius: 25px;
+    padding: 2rem 3rem;
+    box-shadow: 0 0 55px #00fff7bb;
+    position: relative;
+    min-height: 280px;
+    color: #00fff7;
+    user-select: text;
+    animation: fadeInSlide 0.5s ease forwards;
+    max-width: 640px;
+    margin-top: 90px;
+  }
+  section.menu-section.active {
+    display: block;
+  }
+
+  section.menu-section h2 {
+    margin-bottom: 1.2rem;
+    font-size: 2.4rem;
+    text-shadow: 0 0 15px #00fff7;
+  }
+  section.menu-section a, section.menu-section p {
+    color: #00fff7;
+    font-size: 1.2rem;
+    margin: 1.2rem 0;
+    text-decoration: none;
+    display: block;
+    user-select: text;
+    transition: color 0.3s ease;
+  }
+  section.menu-section a:hover {
+    color: #00ddd7;
+    text-decoration: underline;
+  }
+
+  /* Cinematic text animation */
+  .cinematic-text {
+    font-size: 1.3rem;
+    font-style: italic;
+    opacity: 0;
+    animation: cinematicFadeIn 2.8s ease forwards;
+    max-width: 550px;
+    margin: 1.5rem auto 0 auto;
+    color: #00fff7cc;
+    text-shadow: 0 0 20px #00fff7aa;
+  }
+  @keyframes cinematicFadeIn {
+    to { opacity: 1; }
+  }
+
+  /* Background subtle animation on menu */
+  @keyframes bgPulse {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  section.menu-section:nth-child(odd) {
+    background: linear-gradient(270deg, #12131b, #1f2237, #12131b);
+    background-size: 400% 400%;
+    animation: bgPulse 10s ease infinite;
+  }
+  section.menu-section:nth-child(even) {
+    background: linear-gradient(270deg, #12131b, #24243e, #12131b);
+    background-size: 400% 400%;
+    animation: bgPulse 15s ease infinite;
+  }
+
 </style>
 </head>
 <body>
-  <div id="galaxy-bg"></div>
 
-  <button id="toggle-mode" aria-label="Changer le mode sombre/clair">Mode Sombre</button>
+  <!-- Intro plein écran -->
+  <div id="introScreen" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-describedby="introDesc">
+    <h1 id="introTitle">Bienvenue dans mon univers</h1>
+    <label for="languageSelect">Choisis ta langue / Choose your language :</label>
+    <select id="languageSelect" aria-describedby="languageDesc">
+      <option value="fr">Français 🇫🇷</option>
+      <option value="en">English 🇬🇧</option>
+    </select>
+    <button id="enterButton" aria-label="Entrer dans le site">Entrer</button>
+  </div>
 
-  <main class="container" role="main" aria-label="Portail Big M Morgan">
-    <h1 id="main-title" aria-live="polite">Chargement de l’univers…</h1>
-    <div class="welcome-msg" id="welcomeMessage"></div>
-
-    <nav class="tabs" role="tablist" aria-label="Menu principal">
-      <div class="tab active" role="tab" tabindex="0" aria-selected="true" aria-controls="section-links" id="tab-links">LIENS</div>
-      <div class="tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="section-gallery" id="tab-gallery">GALERIE</div>
-      <div class="tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="section-chatbot" id="tab-chatbot">CHATBOT</div>
-      <div class="tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="section-about" id="tab-about">À PROPOS</div>
-      <div class="tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="section-contact" id="tab-contact">CONTACT</div>
-      <div class="tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="section-admin" id="tab-admin">ADMIN</div>
+  <!-- App principal -->
+  <div id="appContainer" aria-live="polite" aria-atomic="true">
+    <nav class="navbar" aria-label="Barre de navigation principale">
+      <img src="https://i.imgur.com/7q0kM6f.jpg" alt="Photo de profil Morgan" class="profile-img" />
+      <div class="title">🌌 Big M 모건</div>
+      <button class="back-button pulse" id="backButton" aria-label="Retour au menu principal" style="display:none;">← Retour</button>
     </nav>
 
-    <section id="section-links" class="content-section active" role="tabpanel" aria-labelledby="tab-links" tabindex="0">
-      <h2>Liens officiels de Morgan</h2>
-      <div id="links-list"></div>
+    <main id="main-menu" aria-label="Menu principal des liens">
+      <button class="link-button" data-menu="instagram" aria-haspopup="true" aria-controls="menu-instagram">📸 Instagram</button>
+      <button class="link-button" data-menu="youtube" aria-haspopup="true" aria-controls="menu-youtube">▶️ YouTube</button>
+      <button class="link-button" data-menu="mail" aria-haspopup="true" aria-controls="menu-mail">✉️ Email</button>
+      <button class="link-button" data-menu="phone" aria-haspopup="true" aria-controls="menu-phone">📞 Téléphone</button>
+      <button class="link-button" data-menu="twitter" aria-haspopup="true" aria-controls="menu-twitter">🐦 Twitter</button>
+    </main>
+
+    <!-- Menus individuels -->
+    <section id="menu-instagram" class="menu-section" role="region" aria-label="Menu Instagram">
+      <h2>Instagram</h2>
+      <p>Rejoins-moi sur Instagram pour découvrir mes dernières créations et moments forts.</p>
+      <a href="https://instagram.com/i_am_24carrats_morgan" target="_blank" rel="noopener noreferrer" tabindex="0">Visiter Instagram</a>
+      <p class="cinematic-text">“Là où les pixels brillent comme des diamants...”</p>
     </section>
 
-    <section id="section-gallery" class="content-section" role="tabpanel" aria-labelledby="tab-gallery" tabindex="0">
-      <h2>Galerie d'Images Cosmiques</h2>
-      <div class="gallery" aria-label="Galerie d'images">
-        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Nebuleuse mystique" />
-        <img src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=400&q=80" alt="Explosion stellaire" />
-        <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=400&q=80" alt="Voie lactée" />
-      </div>
+    <section id="menu-youtube" class="menu-section" role="region" aria-label="Menu YouTube">
+      <h2>YouTube</h2>
+      <p>Regarde mes vidéos, vlogs et performances exclusives sur ma chaîne YouTube.</p>
+      <a href="https://youtube.com/@johnnymorgan" target="_blank" rel="noopener noreferrer" tabindex="0">Voir YouTube</a>
+      <p class="cinematic-text">“Chaque vidéo est une porte vers un autre univers...”</p>
     </section>
 
-    <section id="section-chatbot" class="content-section" role="tabpanel" aria-labelledby="tab-chatbot" tabindex="0">
-      <h2>Assistant Digital Morgan</h2>
-      <div id="chatbot-messages" aria-live="polite" aria-atomic="true"></div>
-      <input type="text" id="chatbot-input" placeholder="Pose ta question..." aria-label="Message chatbot" />
-      <button id="chatbot-send" aria-label="Envoyer le message au chatbot">Envoyer</button>
-      <p id="badge">🎖️ Badge Visiteur : <span id="badge-name">Nouveau</span></p>
+    <section id="menu-mail" class="menu-section" role="region" aria-label="Menu Email">
+      <h2>Email</h2>
+      <p>Pour toute collaboration ou question, envoie-moi un mail.</p>
+      <a href="mailto:24carratsmorgan@gmail.com" tabindex="0">Envoyer un email</a>
+      <p class="cinematic-text">“Les mots écrits sont des ponts entre les âmes.”</p>
     </section>
 
-    <section id="section-about" class="content-section" role="tabpanel" aria-labelledby="tab-about" tabindex="0">
-      <h2>À propos de Morgan</h2>
-      <p>Explorateur infatigable, passionné de recherche, je crée cet univers digital pour partager mes découvertes et mon art. Que chaque visite soit un voyage inspirant à travers les étoiles.</p>
+    <section id="menu-phone" class="menu-section" role="region" aria-label="Menu Téléphone">
+      <h2>Téléphone</h2>
+      <p>Tu préfères une conversation directe ? Voici mon numéro.</p>
+      <a href="tel:+242061098011" tabindex="0">Appeler Morgan</a>
+      <p class="cinematic-text">“La voix humaine, l’onde la plus vraie.”</p>
     </section>
 
-    <section id="section-contact" class="content-section" role="tabpanel" aria-labelledby="tab-contact" tabindex="0">
-      <h2>Contact</h2>
-      <p>Envie de discuter, collaborer ou juste dire bonjour ?</p>
-      <a href="mailto:24carratsmorgan@gmail.com" class="link-btn">✉️ Envoie-moi un mail</a>
-      <a href="tel:+242061098011" class="link-btn">📞 Appelle-moi</a>
+    <section id="menu-twitter" class="menu-section" role="region" aria-label="Menu Twitter">
+      <h2>Twitter</h2>
+      <p>Pour suivre mes pensées et actualités instantanées.</p>
+      <a href="https://twitter.com/24morgan" target="_blank" rel="noopener noreferrer" tabindex="0">Voir Twitter</a>
+      <p class="cinematic-text">“140 caractères pour illuminer la toile.”</p>
     </section>
-
-    <section id="section-admin" class="content-section" role="tabpanel" aria-labelledby="tab-admin" tabindex="0">
-      <h2>Administration</h2>
-      <p>⚠️ Zone réservée aux administrateurs.</p>
-      <textarea id="adminLinksInput" placeholder='Liste JSON des liens personnalisés, exemple : [{"label":"Instagram","url":"https://instagram.com/i_am_24carrats_morgan"}]'></textarea>
-      <button id="adminSaveBtn">💾 Sauvegarder</button>
-      <p id="adminStatus" style="margin-top:1rem; font-style: italic; color:#0ff;"></p>
-    </section>
-  </main>
-
-  <footer>
-    &copy; 2025 Big M — Univers en expansion
-  </footer>
+  </div>
 
   <script>
-    // Initialisation
-    const tabs = document.querySelectorAll('.tab');
-    const sections = document.querySelectorAll('.content-section');
-    let currentTab = 0;
+    const introScreen = document.getElementById('introScreen');
+    const enterButton = document.getElementById('enterButton');
+    const languageSelect = document.getElementById('languageSelect');
+    const appContainer = document.getElementById('appContainer');
+    const mainMenu = document.getElementById('main-menu');
+    const menuSections = document.querySelectorAll('.menu-section');
+    const backButton = document.getElementById('backButton');
 
-    // Activation onglets + access clavier
-    tabs.forEach((tab, idx) => {
-      tab.addEventListener('click', () => activateTab(idx));
-      tab.addEventListener('keydown', e => {
-        if(e.key === 'ArrowRight') {
-          const next = (idx + 1) % tabs.length;
-          activateTab(next);
-          tabs[next].focus();
-        } else if(e.key === 'ArrowLeft') {
-          const prev = (idx - 1 + tabs.length) % tabs.length;
-          activateTab(prev);
-          tabs[prev].focus();
-        } else if(e.key === 'Enter' || e.key === ' ') {
-          activateTab(idx);
-        }
-      });
-    });
-
-    function activateTab(idx) {
-      tabs[currentTab].classList.remove('active');
-      tabs[currentTab].setAttribute('aria-selected', 'false');
-      tabs[currentTab].setAttribute('tabindex', '-1');
-      sections[currentTab].classList.remove('active');
-
-      currentTab = idx;
-
-      tabs[currentTab].classList.add('active');
-      tabs[currentTab].setAttribute('aria-selected', 'true');
-      tabs[currentTab].setAttribute('tabindex', '0');
-      sections[currentTab].classList.add('active');
-      sections[currentTab].focus();
-    }
-
-    // Mode sombre clair auto + toggle
-    const toggleBtn = document.getElementById('toggle-mode');
-    function detectDarkMode() {
-      const h = new Date().getHours();
-      if(h >= 19 || h <= 6) {
-        document.body.classList.add('dark-mode');
-        toggleBtn.textContent = 'Mode Clair';
-      } else {
-        document.body.classList.remove('dark-mode');
-        toggleBtn.textContent = 'Mode Sombre';
-      }
-    }
-    toggleBtn.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      toggleBtn.textContent = document.body.classList.contains('dark-mode') ? 'Mode Clair' : 'Mode Sombre';
-    });
-    detectDarkMode();
-
-    // Gestion des liens personnalisés avec stockage local + admin
-    const adminPanel = document.getElementById('section-admin');
-    const adminLinksInput = document.getElementById('adminLinksInput');
-    const adminSaveBtn = document.getElementById('adminSaveBtn');
-    const adminStatus = document.getElementById('adminStatus');
-    const linksList = document.getElementById('links-list');
-
-    // Liens par défaut (les tiens, avec classe et style)
-    const defaultLinks = [
-      {label: 'Instagram', url: 'https://instagram.com/i_am_24carrats_morgan', icon:'📸'},
-      {label: 'YouTube', url: 'https://youtube.com/@johnnymorgan', icon:'▶️'},
-      {label: 'Email', url: 'mailto:24carratsmorgan@gmail.com', icon:'✉️'},
-      {label: 'Téléphone', url: 'tel:+242061098011', icon:'📞'},
-      {label: 'GitHub', url: 'https://github.com/morgan100', icon:'💻'},
-    ];
-
-    // Récupération liens stockés localement
-    function loadLinks() {
-      let savedLinks = localStorage.getItem('morganLinks');
-      if(savedLinks) {
-        try {
-          const parsed = JSON.parse(savedLinks);
-          if(Array.isArray(parsed)) return parsed;
-        } catch(e) { }
-      }
-      return defaultLinks;
-    }
-
-    // Affichage liens dans la section LIENS
-    function renderLinks() {
-      const links = loadLinks();
-      linksList.innerHTML = '';
-      links.forEach(link => {
-        const a = document.createElement('a');
-        a.href = link.url;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        a.className = 'link-btn';
-        a.textContent = `${link.icon ? link.icon + ' ' : ''}${link.label}`;
-        linksList.appendChild(a);
-      });
-    }
-
-    renderLinks();
-
-    // Admin panel : sauvegarder nouveaux liens JSON
-    adminSaveBtn.addEventListener('click', () => {
-      try {
-        const json = JSON.parse(adminLinksInput.value);
-        if(!Array.isArray(json)) throw 'JSON doit être un tableau';
-        // Vérifier la structure minimale
-        for(const obj of json) {
-          if(typeof obj.label !== 'string' || typeof obj.url !== 'string') {
-            throw 'Chaque élément doit avoir "label" et "url" en chaîne de caractères.';
+    // Textes traduits
+    const translations = {
+      fr: {
+        welcome: "Bienvenue dans mon univers",
+        chooseLang: "Choisis ta langue :",
+        enter: "Entrer",
+        navTitle: "🌌 Big M 모건",
+        back: "← Retour",
+        menus: {
+          instagram: {
+            title: "Instagram",
+            desc: "Rejoins-moi sur Instagram pour découvrir mes dernières créations et moments forts.",
+            linkText: "Visiter Instagram",
+            cinematic: "“Là où les pixels brillent comme des diamants...”"
+          },
+          youtube: {
+            title: "YouTube",
+            desc: "Regarde mes vidéos, vlogs et performances exclusives sur ma chaîne YouTube.",
+            linkText: "Voir YouTube",
+            cinematic: "“Chaque vidéo est une porte vers un autre univers...”"
+          },
+          mail: {
+            title: "Email",
+            desc: "Pour toute collaboration ou question, envoie-moi un mail.",
+            linkText: "Envoyer un email",
+            cinematic: "“Les mots écrits sont des ponts entre les âmes.”"
+          },
+          phone: {
+            title: "Téléphone",
+            desc: "Tu préfères une conversation directe ? Voici mon numéro.",
+            linkText: "Appeler Morgan",
+            cinematic: "“La voix humaine, l’onde la plus vraie.”"
+          },
+          twitter: {
+            title: "Twitter",
+            desc: "Pour suivre mes pensées et actualités instantanées.",
+            linkText: "Voir Twitter",
+            cinematic: "“140 caractères pour illuminer la toile.”"
           }
         }
-        localStorage.setItem('morganLinks', JSON.stringify(json));
-        adminStatus.textContent = '✅ Liens sauvegardés avec succès.';
-        renderLinks();
-      } catch (err) {
-        adminStatus.textContent = '❌ Erreur: ' + err;
+      },
+      en: {
+        welcome: "Welcome to my universe",
+        chooseLang: "Choose your language:",
+        enter: "Enter",
+        navTitle: "🌌 Big M 모건",
+        back: "← Back",
+        menus: {
+          instagram: {
+            title: "Instagram",
+            desc: "Join me on Instagram to discover my latest creations and highlights.",
+            linkText: "Visit Instagram",
+            cinematic: "“Where pixels shine like diamonds...”"
+          },
+          youtube: {
+            title: "YouTube",
+            desc: "Watch my videos, vlogs and exclusive performances on my YouTube channel.",
+            linkText: "Watch YouTube",
+            cinematic: "“Each video is a door to another universe...”"
+          },
+          mail: {
+            title: "Email",
+            desc: "For any collaboration or questions, send me an email.",
+            linkText: "Send an email",
+            cinematic: "“Written words are bridges between souls.”"
+          },
+          phone: {
+            title: "Phone",
+            desc: "Prefer a direct conversation? Here's my number.",
+            linkText: "Call Morgan",
+            cinematic: "“The human voice, the truest wave.”"
+          },
+          twitter: {
+            title: "Twitter",
+            desc: "Follow my thoughts and instant updates.",
+            linkText: "See Twitter",
+            cinematic: "“140 characters to light up the web.”"
+          }
+        }
       }
+    };
+
+    // Charge la langue enregistrée
+    function getSavedLang() {
+      return localStorage.getItem('lang') || 'fr';
+    }
+    function saveLang(lang) {
+      localStorage.setItem('lang', lang);
+    }
+
+    // Met à jour tous les textes selon la langue choisie
+    function updateTexts(lang) {
+      const t = translations[lang];
+      document.getElementById('introTitle').textContent = t.welcome;
+      document.querySelector('#introScreen label').textContent = t.chooseLang;
+      enterButton.textContent = t.enter;
+      document.querySelector('.navbar .title').textContent = t.navTitle;
+      backButton.textContent = t.back;
+
+      // Met à jour chaque section
+      for (const key in t.menus) {
+        const section = document.getElementById('menu-' + key);
+        if (section) {
+          section.querySelector('h2').textContent = t.menus[key].title;
+          section.querySelector('p').textContent = t.menus[key].desc;
+          const link = section.querySelector('a');
+          link.textContent = t.menus[key].linkText;
+          section.querySelector('.cinematic-text').textContent = t.menus[key].cinematic;
+        }
+      }
+    }
+
+    // Affiche l'app, cache l'intro
+    function showApp() {
+      introScreen.style.display = 'none';
+      appContainer.style.display = 'flex';
+    }
+
+    // Ouvre un menu individuel
+    function openMenu(menuId) {
+      mainMenu.style.display = 'none';
+      menuSections.forEach(section => {
+        if(section.id === menuId){
+          section.classList.add('active');
+          section.style.display = 'block';
+        } else {
+          section.classList.remove('active');
+          section.style.display = 'none';
+        }
+      });
+      backButton.style.display = 'inline-block';
+      backButton.focus();
+    }
+
+    // Ferme le menu individuel pour revenir au principal
+    function closeMenu() {
+      menuSections.forEach(section => {
+        section.classList.remove('active');
+        section.style.display = 'none';
+      });
+      mainMenu.style.display = 'block';
+      backButton.style.display = 'none';
+      mainMenu.querySelector('button').focus();
+    }
+
+    // Événements
+    enterButton.addEventListener('click', () => {
+      const lang = languageSelect.value;
+      saveLang(lang);
+      updateTexts(lang);
+      showApp();
     });
 
-    // Remplir admin textarea avec liens actuels
-    function loadAdminLinks() {
-      let savedLinks = localStorage.getItem('morganLinks');
-      if(savedLinks) {
-        adminLinksInput.value = savedLinks;
-      } else {
-        adminLinksInput.value = JSON.stringify(defaultLinks, null, 2);
-      }
-    }
-    loadAdminLinks();
-
-    // Welcome message dynamique selon heure locale
-    function welcomeMessage() {
-      const h = new Date().getHours();
-      if(h < 6) return "Nuit étoilée, Morgan. Prêt pour un voyage astral ?";
-      if(h < 12) return "Bonjour Morgan, que la lumière de l'aube éclaire ta créativité.";
-      if(h < 18) return "Après-midi cosmique, Morgan, l'univers t'inspire !";
-      return "Bonsoir Morgan, les étoiles brillent pour toi.";
-    }
-    document.getElementById('welcomeMessage').textContent = welcomeMessage();
-    document.getElementById('main-title').textContent = "Bienvenue chez Big M 모건";
-
-    // Chatbot ultra-basique (prototype, remplace par IA plus tard)
-    const chatbotMessages = document.getElementById('chatbot-messages');
-    const chatbotInput = document.getElementById('chatbot-input');
-    const chatbotSend = document.getElementById('chatbot-send');
-    const badgeNameSpan = document.getElementById('badge-name');
-
-    // Badge visiteur stocké localement
-    function assignBadge() {
-      let badge = localStorage.getItem('morganBadge');
-      if(!badge) {
-        badge = "Novice Cosmique";
-        localStorage.setItem('morganBadge', badge);
-      }
-      badgeNameSpan.textContent = badge;
-    }
-    assignBadge();
-
-    // Fonction basique de réponse chatbot
-    function chatbotResponse(message) {
-      message = message.toLowerCase();
-      if(message.includes('bonjour') || message.includes('salut')) return "Salut Morgan! Que puis-je faire pour toi aujourd’hui ?";
-      if(message.includes('comment ça va')) return "Je suis un flot d’étoiles, toujours prêt à t’aider !";
-      if(message.includes('liens')) return "Regarde dans l’onglet Liens, tout est à portée de clic.";
-      if(message.includes('aide')) return "Pose-moi ta question, je ferai de mon mieux pour te répondre.";
-      if(message.includes('musique')) return "Je n’ai pas encore de playlist cosmique, mais ça arrive bientôt!";
-      return "Hmm... Je ne suis pas sûr de comprendre, mais je continue à apprendre.";
-    }
-
-    // Ajouter message au chatbot
-    function addChatMessage(sender, text) {
-      const p = document.createElement('p');
-      p.textContent = (sender === 'user' ? 'Tu: ' : 'Bot: ') + text;
-      chatbotMessages.appendChild(p);
-      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    }
-
-    chatbotSend.addEventListener('click', () => {
-      const msg = chatbotInput.value.trim();
-      if(!msg) return;
-      addChatMessage('user', msg);
-      chatbotInput.value = '';
-      setTimeout(() => {
-        addChatMessage('bot', chatbotResponse(msg));
-      }, 800);
-    });
-    chatbotInput.addEventListener('keydown', e => {
-      if(e.key === 'Enter') {
-        chatbotSend.click();
-      }
+    // Si la langue est déjà sauvegardée, saute l'intro
+    window.addEventListener('load', () => {
+      const lang = getSavedLang();
+      languageSelect.value = lang;
+      updateTexts(lang);
+      showApp();
     });
 
+    // Gestion boutons menu principal
+    mainMenu.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        openMenu('menu-' + btn.dataset.menu);
+      });
+    });
+
+    // Bouton retour
+    backButton.addEventListener('click', closeMenu);
+
+    // Touche Echap pour revenir en arrière
+    document.addEventListener('keydown', e => {
+      if(e.key === 'Escape' && backButton.style.display === 'inline-block') {
+        closeMenu();
+      }
+    });
   </script>
 </body>
 </html>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Big M 모건 — Univers Infini</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet" />
-<style>
-  /* Base reset */
-  * {
-    margin: 0; padding: 0; box-sizing: border-box;
-    font-family: 'Orbitron', sans-serif;
-  }
-  html, body {
-    height: 100%;
-    background: radial-gradient(circle at center, #0f0c29, #24243e);
-    color: #00fff7;
-    overflow-x: hidden;
-  }
-  body.dark-mode {
-    background: radial-gradient(circle at center, #01010a, #121125);
-    color: #0ff;
-  }
-
-  /* Galaxy background with animation */
-  #galaxy-bg {
-    position: fixed; top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: url('https://images.unsplash.com/photo-1470770903676-69b98201ea1c?auto=format&fit=crop&w=1950&q=80') no-repeat center center;
-    background-size: cover;
-    filter: brightness(0.6);
-    animation: spinGalaxy 300s linear infinite;
-    z-index: -10;
-  }
-  @keyframes spinGalaxy {
-    from {transform: rotate(0deg);}
-    to {transform: rotate(360deg);}
-  }
-
-  /* Container */
-  .container {
-    max-width: 900px;
-    margin: 4rem auto 2rem;
-    padding: 2rem;
-    background: rgba(15,12,41,0.7);
-    border-radius: 20px;
-    box-shadow: 0 0 40px #00fff7;
-    text-align: center;
-  }
-  h1 {
-    font-size: 3rem;
-    text-shadow: 0 0 25px #00fff7;
-    margin-bottom: 0.5rem;
-    letter-spacing: 3px;
-    cursor: default;
-    user-select: none;
-  }
-  h2 {
-    margin-bottom: 1rem;
-  }
-  .welcome-msg {
-    font-style: italic;
-    color: #aaa;
-    margin-bottom: 2rem;
-    text-shadow: 0 0 12px #00fff7aa;
-  }
-  p {
-    font-size: 1.1rem;
-    line-height: 1.5;
-  }
-  a.link-btn {
-    display: block;
-    margin: 0.5rem auto;
-    padding: 1rem 1.5rem;
-    max-width: 350px;
-    background: #000a;
-    border: 2px solid #00fff7;
-    border-radius: 15px;
-    color: #00fff7;
-    text-decoration: none;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    user-select: none;
-  }
-  a.link-btn:hover {
-    background: #00fff7;
-    color: #111;
-    transform: translateY(-5px);
-    box-shadow: 0 0 30px #00fff7;
-  }
-
-  /* Tabs nav */
-  .tabs {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    user-select: none;
-  }
-  .tab {
-    padding: 0.8rem 2rem;
-    cursor: pointer;
-    background: linear-gradient(135deg, #111, #222);
-    border: 2px solid #00fff7;
-    border-radius: 15px;
-    color: #00fff7;
-    font-weight: 700;
-    transition: all 0.3s ease;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-size: 1rem;
-  }
-  .tab:hover:not(.active) {
-    background: #00fff7;
-    color: #111;
-    transform: scale(1.1);
-    box-shadow: 0 0 25px #00fff7;
-  }
-  .tab.active {
-    background: #00fff7;
-    color: #111;
-    box-shadow: 0 0 30px #00fff7;
-    transform: scale(1.15);
-    cursor: default;
-  }
-
-  /* Sections */
-  .content-section {
-    display: none;
-    background: linear-gradient(135deg, #111, #222);
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 0 40px #00fff7bb;
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: left;
-    color: #00fff7;
-    font-size: 1rem;
-  }
-  .content-section.active {
-    display: block;
-    animation: fadeInUp 1s ease forwards;
-  }
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Admin Panel */
-  #admin-panel {
-    margin-top: 2rem;
-    padding: 1rem;
-    background: rgba(0,0,0,0.7);
-    border-radius: 15px;
-    box-shadow: 0 0 25px #00fff7;
-    display: none;
-    max-width: 600px;
-    color: #00fff7;
-    user-select: text;
-  }
-  #admin-panel h2 {
-    margin-bottom: 1rem;
-    font-weight: 700;
-    font-size: 1.5rem;
-    text-align: center;
-  }
-  #admin-panel textarea {
-    width: 100%;
-    height: 120px;
-    border-radius: 10px;
-    border: none;
-    background: #111;
-    color: #00fff7;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1rem;
-    padding: 1rem;
-    resize: vertical;
-  }
-  #admin-panel button {
-    margin-top: 1rem;
-    padding: 0.7rem 1.5rem;
-    border-radius: 15px;
-    border: 2px solid #00fff7;
-    background: linear-gradient(135deg, #111, #222);
-    color: #00fff7;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  #admin-panel button:hover {
-    background: #00fff7;
-    color: #111;
-    box-shadow: 0 0 25px #00fff7;
-    transform: scale(1.05);
-  }
-
-  /* Gallery */
-  .gallery {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-  .gallery img {
-    width: 120px;
-    height: 120px;
-    border-radius: 15px;
-    object-fit: cover;
-    box-shadow: 0 0 15px #00fff7;
-    transition: transform 0.4s ease;
-    cursor: pointer;
-  }
-  .gallery img:hover {
-    transform: scale(1.1) rotate(5deg);
-  }
-
-  /* Chatbot */
-  #chatbot {
-    margin-top: 2rem;
-    background: #111a;
-    border-radius: 15px;
-    padding: 1rem;
-    max-width: 600px;
-    color: #0ff;
-    font-size: 0.9rem;
-    user-select: text;
-  }
-  #chatbot-messages {
-    height: 150px;
-    overflow-y: auto;
-    border: 1px solid #00fff7;
-    padding: 1rem;
-    border-radius: 10px;
-    background: #000c;
-    margin-bottom: 1rem;
-  }
-  #chatbot-input {
-    width: calc(100% - 100px);
-    padding: 0.7rem;
-    border-radius: 15px;
-    border: none;
-    background: #111;
-    color: #00fff7;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1rem;
-    outline: none;
-    margin-right: 0.5rem;
-  }
-  #chatbot-send {
-    width: 80px;
-    padding: 0.7rem;
-    border-radius: 15px;
-    border: 2px solid #00fff7;
-    background: linear-gradient(135deg, #111, #222);
-    color: #00fff7;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  #chatbot-send:hover {
-    background: #00fff7;
-    color: #111;
-    box-shadow: 0 0 20px #00fff7;
-  }
-
-  /* Badge */
-  #badge {
-    margin-top: 1rem;
-    font-weight: 700;
-    color: #0ff;
-    user-select: none;
-  }
-
-  /* Toggle mode */
-  #toggle-mode {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: 2px solid #00fff7;
-    border-radius: 15px;
-    color: #00fff7;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    font-weight: 700;
-    user-select: none;
-    transition: all 0.3s ease;
-    z-index: 999;
-  }
-  #toggle-mode:hover {
-    background: #00fff7;
-    color: #111;
-    box-shadow: 0 0 20px #00fff7;
-    transform: scale(1.05);
-  }
-</style>
-</head>
-<body>
-  <div id="galaxy-bg"></div>
-
-  <button id="toggle-mode" aria-label="Changer le mode sombre/clair">Mode Sombre</button>
-
-  <main class="container" role="main" aria-label="Portail Big M Morgan">
-    <h1 id="main-title" aria-live="polite">Chargement de l’univers…</h1>
-    <div class="welcome-msg" id="welcomeMessage"></div>
-
-    <nav class="tabs" role="tablist" aria-label="Menu principal">
-      <div class="tab active" role="tab" tabindex="0" aria-selected="true" aria-controls="section-links" id="tab-links">LIENS</div>
-      <div class="tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="section-gallery" id="tab-gallery">GALERIE</div>
-      <div class="tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="section-chatbot" id="tab-chatbot">CHATBOT</div>
-      <div class="tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="section-about" id="tab-about">À PROPOS</div>
-      <div class="tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="section-contact" id="tab-contact">CONTACT</div>
-      <div class="tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="section-admin" id="tab-admin">ADMIN</div>
-    </nav>
-
-    <section id="section-links" class="content-section active" role="tabpanel" aria-labelledby="tab-links">
-      <!-- Liens par défaut ou custom -->
-    </section>
-
-    <section id="section-gallery" class="content-section" role="tabpanel" aria-labelledby="tab-gallery" tabindex="0">
-      <h2>Galerie d'Images Cosmiques</h2>
-      <div class="gallery" aria-label="Galerie d'images">
-        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Nebuleuse mystique" />
-        <img src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=400&q=80" alt="Explosion stellaire" />
-        <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=400&q=80" alt="Voie lactée" />
-      </div>
-    </section>
-
-    <section id="section-chatbot" class="content-section" role="tabpanel" aria-labelledby="tab-chatbot" tabindex="0">
-      <h2>Assistant Digital Morgan</h2>
-      <div id="chatbot-messages" aria-live="polite" aria-atomic="true"></div>
-      <input type="text" id="chatbot-input" placeholder="Pose ta question..." aria-label="Message chatbot" />
-      <button id="chatbot-send" aria-label="Envoyer le message au chatbot">Envoyer</button>
-      <p id="badge">🎖️ Badge Visiteur : <span id="badge-name">Nouveau</span></p>
-    </section>
-
-    <section id="section-about" class="content-section" role="tabpanel" aria-labelledby="tab-about" tabindex="0">
-      <h2>À propos de Morgan</h2>
-      <p>Explorateur infatigable, passionné de recherche, je crée cet univers digital pour partager mes découvertes et mon art. Que chaque visite soit un voyage inspirant à travers les étoiles.</p>
-    </section>
-
-    <section id="section-contact" class="content-section" role="tabpanel" aria-labelledby="tab-contact" tabindex="0">
-      <h2>Contact</h2>
-      <p>Envie de discuter, collaborer ou juste dire bonjour ?</p>
-      <a href="mailto:24carratsmorgan@gmail.com" class="link-btn">✉️ Envoie-moi un mail</a>
-      <a href="tel:+242061098011" class="link-btn">📞 Appelle-moi</a>
-    </section>
-
-    <section id="section-admin" class="content-section" role="tabpanel" aria-labelledby="tab-admin" tabindex="0">
-      <h2>Administration</h2>
-      <p>⚠️ Zone réservée aux administrateurs.</p>
-      <textarea id="adminLinksInput" placeholder="Liste JSON des liens personnalisés..."></textarea>
-      <button id="adminSaveBtn">💾 Sauvegarder</button>
-      <p id="adminStatus" style="margin-top:1rem; font-style: italic; color:#0ff;"></p>
-    </section>
-  </main>
-
-  <footer>
-    &copy; 2025 Big M — Univers en expansion
-  </footer>
-
-  <script>
-    // Variables globales
-    const tabs = document.querySelectorAll('.tab');
-    const sections = document.querySelectorAll('.content-section');
-    let currentTab = 0;
-
-    // Gestion des tabs (clic + clavier)
-    tabs.forEach((tab, idx) => {
-      tab.addEventListener('click', () => activateTab(idx));
-      tab.addEventListener('keydown', e => {
-        if(e.key === 'ArrowRight') {
-          const next = (idx + 1) % tabs.length;
-          activateTab(next);
-          tabs[next].focus();
-        } else if(e.key === 'ArrowLeft') {
-          const prev = (idx - 1 + tabs.length) % tabs.length;
-          activateTab(prev);
-          tabs[prev].focus();
-        } else if(e.key === 'Enter' || e.key === ' ') {
-          activateTab(idx);
-        }
-      });
-    });
-
-    function activateTab(idx) {
-      tabs[currentTab].classList.remove('active');
-      tabs[currentTab].setAttribute('aria-selected', 'false');
-      tabs[currentTab].setAttribute('tabindex', '-1');
-      sections[currentTab].classList.remove('active');
-
-      currentTab = idx;
-
-      tabs[currentTab].classList.add('active');
-      tabs[currentTab].setAttribute('aria-selected', 'true');
-      tabs[currentTab].setAttribute('tabindex', '0');
-      sections[currentTab].classList.add('active');
-      sections[currentTab].focus();
-    }
-
-    // Gestion du mode sombre/clair selon heure locale et toggle
-    const toggleBtn = document.getElementById('toggle-mode');
-    function detectDarkMode() {
-      const h = new Date().getHours();
-      if(h >= 19 || h <= 6) {
-        document.body.classList.add('dark-mode');
-        toggleBtn.textContent = 'Mode Clair';
-      } else {
-        document.body.classList.remove('dark-mode');
-        toggleBtn.textContent = 'Mode Sombre';
-      }
-    }
-    toggleBtn.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      toggleBtn.textContent = document.body.classList.contains('dark-mode') ? 'Mode Clair' : 'Mode Sombre';
-    });
-    detectDarkMode();
-
-    // Récupération paramètres URL et localStorage
-    const urlParams = new URLSearchParams(window.location.search);
-    const lang = urlParams.get('lang') || localStorage.getItem('lang') || 'fr';
-    const auth = urlParams.get('auth') || '';
-    const isAdmin = urlParams
