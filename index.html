@@ -150,3 +150,79 @@ QRCode.toCanvas(document.getElementById('qrCode'), 'https://instagram.com/i_am_2
 </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>24 CARRATS MORGAN — Portail Astral</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body, html { margin:0; padding:0; overflow:hidden; font-family:'Nunito',sans-serif; color:#f0f0f0; background:#000; }
+    canvas#starfield { position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1; }
+    .overlay { position:relative; z-index:1; text-align:center; padding:2rem; }
+    h1 { font-family:'Cinzel Decorative', serif; font-size:3rem; background:linear-gradient(to right,#00ffe7,#7b00ff,#ff00c8); -webkit-background-clip:text; color:transparent; margin-bottom:1rem; }
+    .profile { margin:1rem auto; width:200px; height:260px; overflow:hidden; border-radius:20px; box-shadow:0 0 20px rgba(0,255,231,0.6); }
+    .profile img { width:100%; height:100%; object-fit:cover; }
+    .quote { font-style:italic; margin:1rem auto; max-width:600px; font-size:1.2rem; }
+    .whatsapp { display:inline-block; margin:2rem; padding:1rem 2rem; background:#25D366; color:#fff; border-radius:30px; text-decoration:none; font-size:1.2rem; box-shadow:0 0 10px rgba(0,0,0,0.3); }
+    .audio-control { margin-top:1rem; cursor:pointer; font-size:1rem; color:#fff; opacity:0.8; }
+  </style>
+</head>
+<body>
+  <canvas id="starfield"></canvas>
+  <div class="overlay">
+    <h1>24 CARRATS MORGAN</h1>
+    <div class="profile"><img src="styled_profile_image.png" alt="Morgan"></div>
+    <p class="quote">"Chaque nuit te rapproche des étoiles cachées. Marche avec elles."</p>
+    <a href="https://wa.me/242067224020" target="_blank" class="whatsapp">📱 Contact WhatsApp</a>
+    <div>
+      <audio id="bgm" loop preload="auto">
+        <source src="https://orangefreesounds.com/wp-content/uploads/2025/03/Cosmic-ambient-soundscape-music.mp3" type="audio/mpeg">
+      </audio>
+      <button id="audioBtn" class="audio-control">▶ Activer ambiance</button>
+    </div>
+  </div>
+
+  <script>
+    // Starfield effect (plain JS)
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let w, h, stars = [], speed=0.02;
+    function init() {
+      w = canvas.width = innerWidth;
+      h = canvas.height = innerHeight;
+      stars = Array.from({length:400}, () => ({
+        x: Math.random()*w,
+        y: Math.random()*h,
+        z: Math.random()*w
+      }));
+    }
+    function animate() {
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0,0,w,h);
+      ctx.fillStyle = 'white';
+      stars.forEach(s => {
+        s.z -= speed * w;
+        if (s.z <= 0) s.z = w;
+        const px = (s.x - w/2) * (w/s.z) + w/2;
+        const py = (s.y - h/2) * (w/s.z) + h/2;
+        const radius = (1 - s.z / w) * 2;
+        ctx.beginPath();
+        ctx.arc(px, py, radius, 0, Math.PI*2);
+        ctx.fill();
+      });
+      requestAnimationFrame(animate);
+    }
+    window.addEventListener('resize', init);
+    init(); animate();
+
+    // Audio control
+    const bgm = document.getElementById('bgm');
+    const btn = document.getElementById('audioBtn');
+    btn.addEventListener('click', () => {
+      if (bgm.paused) { bgm.play(); btn.textContent = '⏸ Désactiver ambiance'; }
+      else { bgm.pause(); btn.textContent = '▶ Activer ambiance'; }
+    });
+  </script>
+</body>
+</html>
