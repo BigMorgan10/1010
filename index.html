@@ -1,234 +1,404 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>24 Carrats Morgan</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; font-family: 'Segoe UI', sans-serif; background: #000; color: #fff; overflow: hidden; }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    /* Intro animée */
-    #intro {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: radial-gradient(circle, #000000, #111);
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: center;
-      z-index: 9999;
-      animation: fadeOut 2s ease 4s forwards;
-    }
-    #intro h1 {
-      font-size: 3rem;
-      animation: shine 3s infinite alternate;
-    }
-    @keyframes shine {
-      from { color: #555; }
-      to { color: #fcd303; text-shadow: 0 0 15px #fcd303; }
-    }
-    @keyframes fadeOut {
-      to { opacity: 0; visibility: hidden; }
-    }
+<title>24 Carrats Morgan — Portail</title>
 
-    /* Langue */
-    #lang-select {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.95);
-      display: flex; justify-content: center; align-items: center;
-      z-index: 9998;
-      flex-direction: column;
-    }
-    #lang-select button {
-      margin: 10px;
-      padding: 15px 30px;
-      font-size: 1.2rem;
-      background: #fcd303;
-      border: none;
-      color: #000;
-      cursor: pointer;
-      border-radius: 10px;
-      transition: transform 0.2s;
-    }
-    #lang-select button:hover {
-      transform: scale(1.05);
-    }
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rampart+One&display=swap" rel="stylesheet">
 
-    /* Contenu principal */
-    #app {
-      display: none;
-      padding: 30px;
-      animation: fadeIn 1s ease forwards;
-      position: relative;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+<style>
+:root{
+  --clr-bg:#0f0c29;
+  --clr-bg-alt:#24243e;
+  --clr-accent:#00fff7;
+  --clr-accent-dark:#12131b;
+  --radius:20px;
+  --duration:.35s;
+  --font:'Orbitron',sans-serif;
+}
 
-    nav {
-      margin-top: 20px;
-    }
-    nav a {
-      color: #fcd303;
-      margin: 10px;
-      text-decoration: none;
-      font-weight: bold;
-      position: relative;
-      transition: color 0.3s ease;
-    }
-    nav a::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -3px;
-      width: 100%;
-      height: 2px;
-      background: #fcd303;
-      transform: scaleX(0);
-      transform-origin: right;
-      transition: transform 0.3s ease;
-    }
-    nav a:hover::after {
-      transform: scaleX(1);
-      transform-origin: left;
-    }
-    nav a:hover {
-      color: #fff;
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-    .whatsapp {
-      margin-top: 30px;
-      font-size: 1.2rem;
-    }
-    .menu-section {
-      margin-top: 40px;
-    }
-    .menu-section img {
-      width: 150px;
-      border-radius: 50%;
-      display: block;
-      margin: 0 auto 20px;
-      box-shadow: 0 0 20px rgba(252, 211, 3, 0.6);
-    }
-    .menu-section h1 {
-      text-align: center;
-      font-size: 2rem;
-      color: #fcd303;
-    }
-    .menu-section p, .menu-section ul {
-      text-align: center;
-      margin: 20px;
-      font-size: 1.1rem;
-    }
-    .menu-section ul li {
-      list-style: none;
-      margin: 10px 0;
-    }
-    .menu-section ul li a {
-      color: #fff;
-      text-decoration: underline;
-      transition: all 0.3s ease;
-    }
-    .menu-section ul li a:hover {
-      color: #fcd303;
-      text-shadow: 0 0 10px #fcd303;
-    }
+body, html{
+  width:100%;
+  height:100%;
+  font-family: var(--font);
+  background: radial-gradient(circle, var(--clr-bg) 0%, var(--clr-bg-alt) 70%);
+  color: var(--clr-accent);
+  overflow: hidden;
+  text-align: center;
+}
 
-    /* Bouton retour */
-    #back-to-home {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      background: #fcd303;
-      color: #000;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      z-index: 999;
-      transition: background 0.3s ease;
-    }
-    #back-to-home:hover {
-      background: #fff;
-    }
-  </style>
+/* Intro */
+#introScreen{
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  z-index: 9999;
+  padding: 1rem;
+  background: var(--clr-bg);
+  animation: fadeOut 2s ease 4s forwards;
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; visibility: hidden; }
+}
+
+#animatedTitle{
+  font-family: 'Rampart One', cursive;
+  font-size: clamp(2.5rem,8vw,5rem);
+  text-shadow:
+    0 0 10px var(--clr-accent),
+    0 0 20px var(--clr-accent),
+    0 0 40px var(--clr-accent);
+  animation: pulseGlow 2s infinite alternate;
+}
+
+@keyframes pulseGlow {
+  from {
+    text-shadow:
+      0 0 10px var(--clr-accent),
+      0 0 20px var(--clr-accent),
+      0 0 40px var(--clr-accent);
+  }
+  to {
+    text-shadow:
+      0 0 20px var(--clr-accent),
+      0 0 30px var(--clr-accent),
+      0 0 60px var(--clr-accent);
+  }
+}
+
+#languageSelect{
+  font-size: 1.5rem;
+  padding: 1rem 2rem;
+  border-radius: var(--radius);
+  border: 2px solid var(--clr-accent);
+  background: transparent;
+  color: var(--clr-accent);
+  cursor: pointer;
+  transition: box-shadow var(--duration);
+}
+
+#languageSelect:hover:not(:disabled){
+  box-shadow: 0 0 10px var(--clr-accent);
+}
+
+#enterButton{
+  margin-top: 1rem;
+  padding: 1.2rem 3rem;
+  border-radius: var(--radius);
+  border: none;
+  background: var(--clr-accent);
+  color: var(--clr-accent-dark);
+  font-weight: 700;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all var(--duration);
+}
+
+#enterButton:disabled{
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* App */
+#appContainer{
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem 1rem 4rem;
+  overflow-y: auto;
+}
+
+.navbar{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: #0b0c10dd;
+  backdrop-filter: blur(8px);
+  border-bottom: 2px solid var(--clr-accent);
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  gap: 1rem;
+  z-index: 1000;
+}
+
+.navbar .profile-img{
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 3px solid var(--clr-accent);
+  object-fit: cover;
+}
+
+.navbar .title{
+  flex-grow: 1;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-shadow: 0 0 12px var(--clr-accent);
+}
+
+.back-button{
+  background: transparent;
+  border: 2px solid var(--clr-accent);
+  border-radius: 12px;
+  padding: .5rem 1.2rem;
+  color: var(--clr-accent);
+  cursor: pointer;
+  font-weight: 700;
+  transition: background var(--duration), color var(--duration);
+}
+
+.back-button:hover{
+  background: var(--clr-accent);
+  color: var(--clr-accent-dark);
+  transform: scale(1.05);
+}
+
+/* Menu principal */
+#main-menu{
+  max-width: 640px;
+  width: 100%;
+  margin-top: 90px;
+  display: grid;
+  gap: 1.5rem;
+  padding: 0 1rem;
+}
+
+.link-button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  padding: 1.5rem 3rem;
+  background: linear-gradient(135deg,#111,#222);
+  border: 2px solid var(--clr-accent);
+  border-radius: var(--radius);
+  color: var(--clr-accent);
+  font-weight: 800;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all var(--duration);
+  position: relative;
+  overflow: hidden;
+}
+
+.link-button svg{
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  transition: transform var(--duration);
+}
+
+.link-button:hover{
+  background: var(--clr-accent);
+  color: var(--clr-accent-dark);
+  transform: scale(1.05);
+}
+
+.link-button:hover svg{
+  transform: rotate(15deg) scale(1.2);
+}
+
+/* Survol animé - effet de vague lumineuse */
+.link-button::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(0,255,247,0.4), transparent);
+  transform: skewX(-25deg);
+  transition: left 0.7s ease;
+  pointer-events: none;
+}
+
+.link-button:hover::before {
+  left: 125%;
+}
+
+/* Sections de menu */
+.menu-section{
+  display: none;
+  background: #12131bdd;
+  border-radius: var(--radius);
+  padding: 2rem 3rem;
+  margin-top: 90px;
+  max-width: 640px;
+  text-align: center;
+  animation: fadeInSlide .5s forwards;
+}
+
+.menu-section.active{
+  display: block;
+}
+
+.menu-section h2{
+  margin-bottom: 1.2rem;
+  font-size: 2.4rem;
+  text-shadow: 0 0 15px var(--clr-accent);
+}
+
+.menu-section a{
+  color: var(--clr-accent);
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.menu-section a:hover{
+  text-decoration: underline;
+  color: #00fff7cc;
+}
+
+/* QR Code style */
+#qrCode canvas{
+  margin-top: 1rem;
+  border: 2px solid var(--clr-accent);
+  border-radius: var(--radius);
+}
+
+/* Animation fade and slide */
+@keyframes fadeInSlide{
+  from{
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to{
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Bouton Retour toujours visible */
+#backButton {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1100;
+  display: none;
+  background: var(--clr-accent);
+  color: var(--clr-accent-dark);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 0 10px var(--clr-accent);
+  transition: background var(--duration);
+}
+
+#backButton:hover {
+  background: #00b9b5;
+}
+
+/* Scrollbar */
+#appContainer::-webkit-scrollbar {
+  width: 8px;
+}
+#appContainer::-webkit-scrollbar-thumb {
+  background: var(--clr-accent);
+  border-radius: 10px;
+}
+
+/* Responsive */
+@media(max-width: 700px){
+  #main-menu {
+    padding: 0 0.5rem;
+  }
+  .link-button {
+    padding: 1.2rem 2rem;
+    font-size: 1.2rem;
+  }
+}
+
+</style>
+
 </head>
+
 <body>
 
-  <div id="intro">
-    <h1>Bienvenue chez 24 Carrats Morgan</h1>
-  </div>
+<!-- Intro -->
+<div id="introScreen">
+  <h1 id="animatedTitle">24 Carrats Morgan</h1>
+  <label for="languageSelect">Choisis ta langue / Choose your language :</label>
+  <select id="languageSelect">
+    <option value="">-- Choisis / Choose --</option>
+    <option value="fr">Français</option>
+    <option value="en">English</option>
+  </select>
+  <button id="enterButton" disabled>Entrer</button>
+</div>
 
-  <div id="lang-select">
-    <h2>Choisissez votre langue</h2>
-    <button onclick="selectLang('fr')">Français</button>
-    <button onclick="selectLang('en')">English</button>
-  </div>
+<!-- App -->
+<div id="appContainer">
+  <nav class="navbar">
+    <img src="https://i.imgur.com/7q0kM6f.jpg" alt="Morgan" class="profile-img">
+    <span class="title">24 Carrats Morgan</span>
+  </nav>
 
-  <div id="app">
-    <button id="back-to-home" onclick="goHome()">🏠 Accueil</button>
+  <main id="main-menu">
+    <button class="link-button" data-menu="instagram" aria-label="Instagram">
+      <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4c0 3.2-2.6 5.8-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8C2 4.6 4.6 2 7.8 2zm-.2 2A3.6 3.6 0 0 0 4 7.6v8.8c0 2 1.6 3.6 3.6 3.6h8.8c2 0 3.6-1.6 3.6-3.6V7.6c0-2-1.6-3.6-3.6-3.6H7.6zm9.65 1.5A1.25 1.25 0 0 1 18.5 6.75 1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75 1.25 1.25 0 0 1 17.25 5.5zM12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+      Instagram
+    </button>
 
-    <div class="menu-section" id="home">
-      <img src="https://via.placeholder.com/150" alt="Morgan">
-      <h1>Accueil</h1>
-      <nav>
-        <a href="#about">À propos</a>
-        <a href="#works">Œuvres</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </div>
+    <button class="link-button" data-menu="youtube" aria-label="YouTube">
+      <svg viewBox="0 0 24 24"><path d="M10 15l5.19-3L10 9v6zM21.56 7.17A2 2 0 0 0 20 5.33H4a2 2 0 0 0-2 2v9.34a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7.17z"/></svg>
+      YouTube
+    </button>
 
-    <div class="menu-section" id="about">
-      <img src="https://via.placeholder.com/150" alt="Morgan">
-      <h1>À propos</h1>
-      <p>Un artiste mystique, une âme en or, un regard sur l’invisible.</p>
-    </div>
+    <button class="link-button" data-menu="mail" aria-label="Email">
+      <svg viewBox="0 0 24 24"><path d="M20 8l-8 5-8-5V6l8 5 8-5v2zm0-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/></svg>
+      Email
+    </button>
 
-    <div class="menu-section" id="works">
-      <img src="https://via.placeholder.com/150" alt="Morgan">
-      <h1>Œuvres</h1>
-      <ul>
-        <li><a href="#">Projet 1</a></li>
-        <li><a href="#">Projet 2</a></li>
-        <li><a href="#">Projet 3</a></li>
-      </ul>
-    </div>
+    <button class="link-button" data-menu="phone" aria-label="Téléphone">
+      <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2a1.25 1.25 0 0 1 1.02-.27 17.9 17.9 0 0 0 3.55-.39 1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1.25 1.25 0 0 1-.25 1.32z"/></svg>
+      Téléphone
+    </button>
 
-    <div class="menu-section" id="contact">
-      <img src="https://via.placeholder.com/150" alt="Morgan">
-      <h1>Contact</h1>
-      <div class="whatsapp">
-        WhatsApp : <strong>067224220</strong>
-      </div>
-    </div>
-  </div>
+    <button class="link-button" data-menu="x" aria-label="X Twitter">
+      <svg viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05a4.5 4.5 0 0 0-3.18-1.38c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.99-3.56-.18-6.73-1.89-8.84-4.48-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.7 0-1.34-.21-1.92-.53v.05c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.94.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.07C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/></svg>
+      X (Twitter)
+    </button>
 
-  <script>
-    const selectLang = (lang) => {
-      localStorage.setItem('lang', lang);
-      document.getElementById('lang-select').style.display = 'none';
-      document.getElementById('app').style.display = 'block';
-    };
+    <button class="link-button" data-menu="facebook" aria-label="Facebook">
+      <svg viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
+      Facebook
+    </button>
+  </main>
 
-    const goHome = () => {
-      document.getElementById('home').scrollIntoView({ behavior: 'smooth' });
-    };
+  <!-- Sections -->
+  <section id="menu-instagram" class="menu-section">
+    <h2>Instagram</h2>
+    <p>@i_am_24carrats_morgan</p>
+    <a href="https://instagram.com/i_am_24carrats_morgan" target="_blank" rel="noopener noreferrer">Visiter</a>
+    <div id="qrCode"></div>
+  </section>
 
-    window.onload = () => {
-      const lang = localStorage.getItem('lang');
-      if (!lang) {
-        document.getElementById('lang-select').style.display = 'flex';
-        document.getElementById('app').style.display = 'none';
-      } else {
-        document.getElementById('lang-select').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-      }
-    };
-  </script>
+  <section id="menu-youtube" class="menu-section">
+    <h2>YouTube</h2>
+    <p>Johnny Morgan</p>
+    <a href="https://youtube.com/@johnnymorgan" target="_blank" rel="noopener noreferrer">Voir la chaîne</a>
+  </section>
 
-</body>
-</html>
+  <section id="menu-mail" class="menu-section">
+    <h2>Email</h2>
+    <a href="mailto:24carratsmorgan@gmail.com">24carratsmorgan@gmail.com</a>
+  </
