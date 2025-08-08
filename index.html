@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>24 Carrats Morgan</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -13,15 +13,15 @@
       color: #fff;
       overflow-x: hidden;
     }
-
-    /* Intro animée */
     #intro {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: radial-gradient(circle, #000000, #111);
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: center;
+      background: radial-gradient(circle, #000, #111);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       z-index: 9999;
       animation: fadeOut 2s ease 4s forwards;
     }
@@ -36,14 +36,14 @@
     @keyframes fadeOut {
       to { opacity: 0; visibility: hidden; }
     }
-
-    /* Sélecteur de langue */
     #lang-select {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
       background: rgba(0,0,0,0.95);
-      display: flex; justify-content: center; align-items: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       z-index: 9998;
       flex-direction: column;
     }
@@ -61,8 +61,6 @@
     #lang-select button:hover {
       transform: scale(1.05);
     }
-
-    /* Contenu principal */
     #app {
       display: none;
       padding: 30px;
@@ -72,88 +70,69 @@
       from { opacity: 0; }
       to { opacity: 1; }
     }
-
     nav {
       margin-top: 20px;
-      text-align: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
-
     nav a {
       color: #fcd303;
-      margin: 10px;
       text-decoration: none;
       font-weight: bold;
       position: relative;
+      transition: all 0.3s ease;
     }
-
-    nav a::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: -4px;
-      left: 50%;
-      background-color: #fcd303;
-      transition: 0.3s ease;
-      transform: translateX(-50%);
+    nav a:hover {
+      text-shadow: 0 0 10px #fcd303;
+      transform: scale(1.1);
     }
-
-    nav a:hover::after {
-      width: 100%;
-    }
-
-    .whatsapp {
-      margin-top: 30px;
-      font-size: 1.2rem;
-    }
-
     .menu-section {
       margin-top: 40px;
-      text-align: center;
     }
-
     .menu-section img {
       width: 150px;
       border-radius: 50%;
       display: block;
       margin: 0 auto 20px;
     }
-
-    /* Bouton Accueil */
-    #home-btn {
+    .back-home {
       position: fixed;
-      top: 10px;
-      right: 10px;
-      z-index: 10000;
+      top: 20px;
+      left: 20px;
       background: #fcd303;
       color: #000;
-      padding: 10px 15px;
+      padding: 10px 20px;
       border-radius: 8px;
-      font-weight: bold;
       text-decoration: none;
-      box-shadow: 0 0 10px #fcd303aa;
+      font-weight: bold;
+      z-index: 1000;
+      box-shadow: 0 0 10px #fcd303;
       transition: transform 0.2s;
     }
-
-    #home-btn:hover {
+    .back-home:hover {
       transform: scale(1.05);
     }
   </style>
 </head>
 <body>
 
+  <!-- Intro -->
   <div id="intro">
     <h1>Bienvenue chez 24 Carrats Morgan</h1>
   </div>
 
+  <!-- Sélecteur de langue -->
   <div id="lang-select">
     <h2>Choisissez votre langue</h2>
     <button onclick="selectLang('fr')">Français</button>
     <button onclick="selectLang('en')">English</button>
   </div>
 
-  <a href="#home" id="home-btn">Accueil</a>
+  <!-- Bouton Retour Accueil -->
+  <a href="#home" class="back-home">🏠 Accueil</a>
 
+  <!-- Contenu principal -->
   <div id="app">
     <div class="menu-section" id="home">
       <img src="https://via.placeholder.com/150" alt="Morgan">
@@ -184,19 +163,19 @@
     <div class="menu-section" id="contact">
       <img src="https://via.placeholder.com/150" alt="Morgan">
       <h1>Contact</h1>
-      <div class="whatsapp">
-        WhatsApp : <strong>067224220</strong>
-      </div>
+      <p>Tu peux me retrouver sur WhatsApp ou sur mes réseaux. 🌐</p>
+      <!-- Lien WhatsApp invisible mais présent dans le code -->
+      <a href="https://wa.me/24267224220" target="_blank" style="display:none;" id="hiddenWhatsApp">WhatsApp</a>
     </div>
   </div>
 
+  <!-- JavaScript -->
   <script>
     const selectLang = (lang) => {
       localStorage.setItem('lang', lang);
       document.getElementById('lang-select').style.display = 'none';
       document.getElementById('app').style.display = 'block';
     };
-
     window.onload = () => {
       const lang = localStorage.getItem('lang');
       if (!lang) {
@@ -208,6 +187,5 @@
       }
     };
   </script>
-
 </body>
 </html>
