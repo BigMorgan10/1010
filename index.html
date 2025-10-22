@@ -1,191 +1,213 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>24 Carrats Morgan</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      height: 100%;
-      font-family: 'Segoe UI', sans-serif;
-      background: #000;
-      color: #fff;
-      overflow-x: hidden;
-    }
-    #intro {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: radial-gradient(circle, #000, #111);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      animation: fadeOut 2s ease 4s forwards;
-    }
-    #intro h1 {
-      font-size: 3rem;
-      animation: shine 3s infinite alternate;
-    }
-    @keyframes shine {
-      from { color: #555; }
-      to { color: #fcd303; text-shadow: 0 0 15px #fcd303; }
-    }
-    @keyframes fadeOut {
-      to { opacity: 0; visibility: hidden; }
-    }
-    #lang-select {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.95);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9998;
-      flex-direction: column;
-    }
-    #lang-select button {
-      margin: 10px;
-      padding: 15px 30px;
-      font-size: 1.2rem;
-      background: #fcd303;
-      border: none;
-      color: #000;
-      cursor: pointer;
-      border-radius: 10px;
-      transition: transform 0.2s;
-    }
-    #lang-select button:hover {
-      transform: scale(1.05);
-    }
-    #app {
-      display: none;
-      padding: 30px;
-      animation: fadeIn 1s ease forwards;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    nav {
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    nav a {
-      color: #fcd303;
-      text-decoration: none;
-      font-weight: bold;
-      position: relative;
-      transition: all 0.3s ease;
-    }
-    nav a:hover {
-      text-shadow: 0 0 10px #fcd303;
-      transform: scale(1.1);
-    }
-    .menu-section {
-      margin-top: 40px;
-    }
-    .menu-section img {
-      width: 150px;
-      border-radius: 50%;
-      display: block;
-      margin: 0 auto 20px;
-    }
-    .back-home {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background: #fcd303;
-      color: #000;
-      padding: 10px 20px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      z-index: 1000;
-      box-shadow: 0 0 10px #fcd303;
-      transition: transform 0.2s;
-    }
-    .back-home:hover {
-      transform: scale(1.05);
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Morning_Starr Morgan – War-Room ULTRA</title>
+<style>
+:root{
+  --clr-bg:#000010;
+  --clr-panel:#0a0a1a;
+  --clr-neon:#00fff7;
+  --clr-accent:#ff00c8;
+  --radius:12px;
+  --font:'Orbitron',sans-serif;
+  --mono:'Courier New',Courier,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body,html{width:100%;height:100%;font-family:var(--font);background:var(--clr-bg);color:var(--clr-neon);overflow:hidden;position:relative}
+body.light{--clr-bg:#f0f0fa;--clr-panel:#ffffff;--clr-neon:#005c63;--clr-accent:#a0006b;color:#005c63}
+body.veil #grid{filter:blur(20px) opacity(.2);transform:scale(.95);transition:1s}
+body.mute #sonIco{opacity:.3}
+
+#introScreen{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2rem;z-index:9999;background:var(--clr-bg)}
+#animatedTitle{font-size:clamp(2.5rem,8vw,5rem);text-shadow:0 0 10px var(--clr-neon),0 0 20px var(--clr-neon),0 0 40px var(--clr-neon);animation:pulseGlow 2s infinite alternate}
+@keyframes pulseGlow{to{text-shadow:0 0 20px var(--clr-neon),0 0 30px var(--clr-neon),0 0 60px var(--clr-neon)}}
+#languageSelect{font-size:1.5rem;padding:1rem 2rem;border-radius:var(--radius);border:2px solid var(--clr-neon);background:transparent;color:var(--clr-neon)}
+#enterButton{margin-top:1rem;padding:1.2rem 3rem;border-radius:var(--radius);border:none;background:var(--clr-neon);color:var(--clr-bg);font-weight:700;font-size:1.4rem;cursor:pointer;transition:.3s}
+#enterButton:disabled{opacity:.5;cursor:not-allowed}
+
+#warRoom{display:none;flex-direction:column;height:100%;padding:1rem}
+header{display:flex;align-items:center;justify-content:space-between;padding:.5rem 1rem;border-bottom:1px solid var(--clr-neon)}
+#clock{font-size:1.5rem;font-family:var(--mono)}
+#stats{display:flex;gap:1rem;font-size:.9rem}
+.stat{padding:.3rem .6rem;border:1px solid var(--clr-neon);border-radius:var(--radius)}
+#grid{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;padding:1rem}
+.panel{position:relative;background:var(--clr-panel);border:1px solid var(--clr-neon);border-radius:var(--radius);padding:1rem;cursor:pointer;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;gap:.5rem;outline:none}
+.panel:hover,.panel:focus{transform:translateY(-4px);box-shadow:0 0 15px var(--clr-neon)}
+.panel h3{margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.panel svg{width:20px;height:20px;fill:var(--clr-neon)}
+.live{flex:1;font-family:var(--mono);font-size:.8rem;overflow:hidden}
+
+.content-pane{display:none;position:fixed;inset:0;background:var(--clr-bg);z-index:100;padding:4rem 2rem 2rem;animation:fadeIn .4s}
+.content-pane.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.back-button{position:fixed;top:1rem;left:1rem;padding:.5rem 1rem;border:1px solid var(--clr-neon);background:transparent;color:var(--clr-neon);cursor:pointer;border-radius:var(--radius)}
+.content-pane h2{margin-bottom:1rem;text-shadow:0 0 10px var(--clr-neon)}
+.content-pane a{color:var(--clr-accent);text-decoration:none}
+.content-pane a:hover{text-decoration:underline}
+
+#help{position:fixed;bottom:1rem;right:1rem;font-size:.7rem;opacity:.6}
+.qr-box canvas{margin-top:1rem;border:2px solid var(--clr-neon);border-radius:var(--radius)}
+
+/* ---------- IMAGES BASE64 ---------- */
+.bg-cosmos{background-image:url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA8A/9k=');background-size:cover;background-position:center}
+.bg-neon{background-image:url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA8A/9k=');background-size:cover;background-position:center}
+</style>
 </head>
 <body>
+<div id="introScreen" class="bg-cosmos">
+  <h1 id="animatedTitle">Morning_Starr Morgan</h1>
+  <label for="languageSelect">Langue / Language :</label>
+  <select id="languageSelect">
+    <option value="">-- Choisis / Choose --</option>
+    <option value="fr">Français</option>
+    <option value="en">English</option>
+  </select>
+  <button id="enterButton" disabled>Entrer</button>
+</div>
 
-  <!-- Intro -->
-  <div id="intro">
-    <h1>Bienvenue chez 24 Carrats Morgan</h1>
-  </div>
-
-  <!-- Sélecteur de langue -->
-  <div id="lang-select">
-    <h2>Choisissez votre langue</h2>
-    <button onclick="selectLang('fr')">Français</button>
-    <button onclick="selectLang('en')">English</button>
-  </div>
-
-  <!-- Bouton Retour Accueil -->
-  <a href="#home" class="back-home">🏠 Accueil</a>
-
-  <!-- Contenu principal -->
-  <div id="app">
-    <div class="menu-section" id="home">
-      <img src="https://via.placeholder.com/150" alt="Morgan">
-      <h1>Accueil</h1>
-      <nav>
-        <a href="#about">À propos</a>
-        <a href="#works">Œuvres</a>
-        <a href="#contact">Contact</a>
-      </nav>
+<div id="warRoom">
+  <header>
+    <div id="clock">--:--:--</div>
+    <div id="stats">
+      <div class="stat">CPU <span id="cpu">--</span>%</div>
+      <div class="stat">TEMP <span id="temp">--</span>°C</div>
+      <div class="stat">SIGNAL <span id="sig">--</span> dB</div>
+      <div class="stat" id="sonIco">SON</div>
     </div>
+  </header>
+  <main id="grid">
+    <div class="panel" data-pane="instagram" tabindex="0"><h3><svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4c0 3.2-2.6 5.8-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8C2 4.6 4.6 2 7.8 2zm-.2 2A3.6 3.6 0 0 0 4 7.6v8.8c0 2 1.6 3.6 3.6 3.6h8.8c2 0 3.6-1.6 3.6-3.6V7.6c0-2-1.6-3.6-3.6-3.6H7.6zm9.65 1.5A1.25 1.25 0 0 1 18.5 6.75 1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75 1.25 1.25 0 0 1 17.25 5.5zM12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg> Instagram</h3><div class="live" id="ig-live">#bigmorningstarr<br>connecting...</div></div>
+    <div class="panel" data-pane="youtube" tabindex="0"><h3><svg viewBox="0 0 24 24"><path d="M10 15l5.19-3L10 9v6zM21.56 7.17A2 2 0 0 0 20 5.33H4a2 2 0 0 0-2 2v9.34a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7.17z"/></svg> YouTube</h3><div class="live" id="yt-live">@JohnnyMorgan-rs7xe<br>last live --:--</div></div>
+    <div class="panel" data-pane="mail" tabindex="0"><h3><svg viewBox="0 0 24 24"><path d="M20 8l-8 5-8-5V6l8 5 8-5v2zm0-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/></svg> Email</h3><div class="live">morgunshted9@gmail.com<br>inbox 0</div></div>
+    <div class="panel" data-pane="phone" tabindex="0"><h3><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2a1.25 1.25 0 0 1 1.02-.27 17.9 17.9 0 0 0 3.55-.39 1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1.25 1.25 0 0 1-.25 1.32z"/></svg> Phone</h3><div class="live">06-463-32-08<br>06-722-40-20</div></div>
+    <div class="panel" data-pane="x" tabindex="0"><h3><svg viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05a4.5 4.5 0 0 0-3.18-1.38c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.99-3.56-.18-6.73-1.89-8.84-4.48-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.7 0-1.34-.21-1.92-.53v.05c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.94.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.07C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/></svg> X</h3><div class="live">@morgunshted9<br>tweets --</div></div>
+    <div class="panel" data-pane="facebook" tabindex="0"><h3><svg viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg> Facebook</h3><div class="live">Morgan Morningstarr<br>friends --</div></div>
+  </main>
+  <div id="help">↑↓←→ nav | Enter open | Esc back | Shift+L theme | Shift+S veil | Shift+M mute | Shift+Z scan | Shift+Y synchro | Shift+V voix | Shift+H aide</div>
+</div>
 
-    <div class="menu-section" id="about">
-      <img src="https://via.placeholder.com/150" alt="Morgan">
-      <h1>À propos</h1>
-      <p>Un artiste mystique, une âme en or, un regard sur l’invisible.</p>
-    </div>
+<!-- ---------- PAGES CONTENUS ---------- -->
+<section id="pane-instagram" class="content-pane bg-neon">
+  <button class="back-button">← Retour</button>
+  <h2>Instagram – @bigmorningstarr</h2>
+  <p><a href="https://instagram.com/bigmorningstarr" target="_blank" rel="noopener noreferrer">Ouvrir Instagram</a></p>
+  <p id="quote-instagram"></p>
+  <div class="qr-box" id="qrInsta"></div>
+</section>
 
-    <div class="menu-section" id="works">
-      <img src="https://via.placeholder.com/150" alt="Morgan">
-      <h1>Œuvres</h1>
-      <ul>
-        <li><a href="#">Projet 1</a></li>
-        <li><a href="#">Projet 2</a></li>
-        <li><a href="#">Projet 3</a></li>
-      </ul>
-    </div>
+<section id="pane-youtube" class="content-pane bg-cosmos">
+  <button class="back-button">← Retour</button>
+  <h2>YouTube – @JohnnyMorgan-rs7xe</h2>
+  <p><a href="https://youtube.com/@JohnnyMorgan-rs7xe" target="_blank" rel="noopener noreferrer">Voir la chaîne</a></p>
+  <p id="quote-youtube"></p>
+</section>
 
-    <div class="menu-section" id="contact">
-      <img src="https://via.placeholder.com/150" alt="Morgan">
-      <h1>Contact</h1>
-      <p>Tu peux me retrouver sur WhatsApp ou sur mes réseaux. 🌐</p>
-      <!-- Lien WhatsApp invisible mais présent dans le code -->
-      <a href="https://wa.me/24267224220" target="_blank" style="display:none;" id="hiddenWhatsApp">WhatsApp</a>
-    </div>
-  </div>
+<section id="pane-mail" class="content-pane bg-neon">
+  <button class="back-button">← Retour</button>
+  <h2>Email</h2>
+  <a href="mailto:morgunshted9@gmail.com">morgunshted9@gmail.com</a>
+  <p id="quote-mail"></p>
+</section>
 
-  <!-- JavaScript -->
-  <script>
-    const selectLang = (lang) => {
-      localStorage.setItem('lang', lang);
-      document.getElementById('lang-select').style.display = 'none';
-      document.getElementById('app').style.display = 'block';
-    };
-    window.onload = () => {
-      const lang = localStorage.getItem('lang');
-      if (!lang) {
-        document.getElementById('lang-select').style.display = 'flex';
-        document.getElementById('app').style.display = 'none';
-      } else {
-        document.getElementById('lang-select').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-      }
-    };
-  </script>
+<section id="pane-phone" class="content-pane bg-cosmos">
+  <button class="back-button">← Retour</button>
+  <h2>Téléphone</h2>
+  <a href="tel:+242064633208">06-463-32-08</a> / <a href="tel:+242067224020">06-722-40-20</a>
+  <p id="quote-phone"></p>
+</section>
+
+<section id="pane-x" class="content-pane bg-neon">
+  <button class="back-button">← Retour</button>
+  <h2>X – @morgunshted9</h2>
+  <p><a href="https://x.com/morgunshted9" target="_blank" rel="noopener noreferrer">Suivre</a></p>
+  <p id="quote-x"></p>
+</section>
+
+<section id="pane-facebook" class="content-pane bg-cosmos">
+  <button class="back-button">← Retour</button>
+  <h2>Facebook – Morgan Morningstarr</h2>
+  <p><a href="https://facebook.com/morgan.mornigstarr" target="_blank" rel="noopener noreferrer">Visiter</a></p>
+  <p id="quote-facebook"></p>
+</section>
+
+<script>
+/* ---------- INTRO ---------- */
+const langSel=document.getElementById('languageSelect'),enterBtn=document.getElementById('enterButton'),intro=document.getElementById('introScreen'),war=document.getElementById('warRoom');
+langSel.addEventListener('change',()=>enterBtn.disabled=!langSel.value);
+enterBtn.addEventListener('click',()=>{localStorage.setItem('lang',langSel.value);intro.style.display='none';war.style.display='flex';startWarp();});
+if(localStorage.getItem('lang')){intro.remove();war.style.display='flex';startWarp();}
+
+function startWarp(){
+  /* clock */
+  const clk=document.getElementById('clock');
+  setInterval(()=>{const d=new Date();clk.textContent=d.toLocaleTimeString('fr-FR');},1000);
+  /* fake stats */
+  setInterval(()=>{
+    document.getElementById('cpu').textContent=(30+Math.random()*40).toFixed(1);
+    document.getElementById('temp').textContent=(40+Math.random()*30).toFixed(0);
+    document.getElementById('sig').textContent=(-50+Math.random()*20).toFixed(0);
+  },1500);
+  /* QR */
+  const qr=new QRCode(document.getElementById('qrInsta'),{text:'https://instagram.com/bigmorningstarr',width:160,height:160,colorDark:'#00fff7',colorLight:'#000010'});
+  /* textes aléatoires */
+  const quotes=[
+    "Chaque étoile est une porte que tu n'as pas encore ouverte.",
+    "Le silence entre deux battements de cœur est un univers entier.",
+    "Quand le néon s'éteint, l'esprit s'allume.",
+    "Derrière chaque pixel se cache un ange ou un démon.",
+    "Le cosmos te regarde ; cligne des yeux, il t'oubliera.",
+    "Les mots sont des fusées ; lance-les ou brûle-les.",
+    "Ton ombre sait ton nom, mais ne le répète jamais.",
+    "Si tu comptes les étoiles, elles te comptent en retour."
+  ];
+  document.querySelectorAll('[id^="quote-"]').forEach(el=>el.textContent=quotes[Math.floor(Math.random()*quotes.length)]);
+}
+
+/* ---------- NAV ---------- */
+const panels=Array.from(document.querySelectorAll('.panel'));
+let idx=0, mute=false, recOn=true;
+function focusPanel(i){panels[i]?.focus();}
+document.addEventListener('keydown',e=>{
+  if(war.style.display!=='flex') return;
+  if(e.key==='ArrowDown'){idx=(idx+3)%panels.length;focusPanel(idx);}
+  if(e.key==='ArrowUp'){idx=(idx-3+panels.length)%panels.length;focusPanel(idx);}
+  if(e.key==='ArrowRight'){idx=(idx+1)%panels.length;focusPanel(idx);}
+  if(e.key==='ArrowLeft'){idx=(idx-1+panels.length)%panels.length;focusPanel(idx);}
+  if(e.key==='Enter'){panels[idx].click();}
+  if(e.key==='Escape'){document.querySelectorAll('.content-pane').forEach(p=>p.classList.remove('active'));war.style.display='flex';}
+  if(e.shiftKey&&e.key.toLowerCase()==='l')document.body.classList.toggle('light');
+  if(e.shiftKey&&e.key.toLowerCase()==='s')document.body.classList.toggle('veil');
+  if(e.shiftKey&&e.key.toLowerCase()==='m'){mute=!mute;document.body.classList.toggle('mute');}
+  if(e.shiftKey&&e.key.toLowerCase()==='v')recOn=!recOn;
+  if(e.shiftKey&&e.key.toLowerCase()==='h')alert('Aide:\n↑↓←→ nav | Enter ouvre | Esc retour\nShift+L thème | Shift+S veille | Shift+M mute\nShift+Z scan | Shift+Y synchro | Shift+V voix');
+});
+panels.forEach((p,i)=>p.addEventListener('click',()=>{war.style.display='none';document.getElementById('pane-'+p.dataset.pane).classList.add('active');}));
+document.querySelectorAll('.back-button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.content-pane').forEach(p=>p.classList.remove('active'));war.style.display='flex';}));
+focusPanel(0);
+
+/* ---------- VOIX ---------- */
+if('webkitSpeechRecognition' in window){
+  const rec=new webkitSpeechRecognition();rec.lang='fr-FR';rec.continuous=true;rec.interimResults=false;
+  rec.onresult=e=>{
+    if(!recOn) return;
+    const cmd=e.results[e.results.length-1][0].transcript.trim().toLowerCase();
+    if(cmd.includes('instagram')) panels.find(p=>p.dataset.pane==='instagram').click();
+    if(cmd.includes('youtube')) panels.find(p=>p.dataset.pane==='youtube').click();
+    if(cmd.includes('mail')) panels.find(p=>p.dataset.pane==='mail').click();
+    if(cmd.includes('phone')) panels.find(p=>p.dataset.pane==='phone').click();
+    if(cmd.includes('x')||cmd.includes('twitter')) panels.find(p=>p.dataset.pane==='x').click();
+    if(cmd.includes('facebook')) panels.find(p=>p.dataset.pane==='facebook').click();
+    if(cmd.includes('retour')||cmd.includes('back')) document.querySelector('.back-button').click();
+    if(cmd.includes('thème clair')) document.body.classList.add('light');
+    if(cmd.includes('thème sombre')) document.body.classList.remove('light');
+    if(cmd.includes('veille')) document.body.classList.toggle('veil');
+    if(cmd.includes('mute')){mute=true;document.body.classList.add('mute');}
+    if(cmd.includes('son')){mute=false;document.body.classList.remove('mute');}
+  };
+  rec.start();
+}
+</script>
 </body>
 </html>
